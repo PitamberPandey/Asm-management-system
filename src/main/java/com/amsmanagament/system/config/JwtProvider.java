@@ -22,11 +22,11 @@ public class JwtProvider {
     public String generateToken(Authentication authentication) {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String roles = authorities.stream()
-                .map(GrantedAuthority::getAuthority)
+                .map(a -> a.getAuthority().startsWith("ROLE_") ? a.getAuthority() : "ROLE_" + a.getAuthority())
                 .collect(Collectors.joining(","));
 
         return Jwts.builder()
-                .setSubject(authentication.getName())  // phone number
+                .setSubject(authentication.getName())  // phone number or username
                 .claim("authorities", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -34,7 +34,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    // Extract phone number from token
+    // Extract username/phone number from token
     public String getNumberFromToken(String jwt) {
         if (jwt.startsWith("Bearer ")) jwt = jwt.substring(7);
         Claims claims = Jwts.parserBuilder()

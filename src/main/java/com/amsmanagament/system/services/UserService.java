@@ -7,5 +7,9 @@ public interface UserService {
 
         public User findUserByNumber(String number)throws Exception;
 
+        public  User findByUserId(Long id)throws Exception;
+
+        public  User updateUser(User user)throws Exception;
+
 
 }

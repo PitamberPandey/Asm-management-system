@@ -4,10 +4,7 @@ package com.amsmanagament.system.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -73,6 +70,22 @@ public class User {
     @JsonProperty(access =JsonProperty.Access.WRITE_ONLY)
     private String password;
     private User_Role role=User_Role.ROLE_USER;
+
+    private  String gender;
+
+    private String dob;
+    private  String profileImage;
+    private  String address;
+    private String acountStatus="ACTIVE";
+    private String created_at;
+    private String updated_at;
+
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Farmer farmer;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Seller seller;
 
 }
 

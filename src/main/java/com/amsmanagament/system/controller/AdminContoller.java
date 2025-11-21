@@ -1,0 +1,34 @@
+package com.amsmanagament.system.controller;
+
+
+
+import com.amsmanagament.system.model.User;
+import com.amsmanagament.system.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/admin")
+public class AdminContoller {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) throws Exception {
+        User user = userService.findByUserId(id);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/phone/{number}")
+    public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String number) throws Exception {
+        User user = userService.findUserByNumber(number);
+        return ResponseEntity.ok(user);
+    }
+
+
+
+
+
+}

@@ -6,8 +6,10 @@ import com.amsmanagament.system.repo.UserRepo;
 import com.amsmanagament.system.services.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 
 
 @Service
@@ -44,5 +46,16 @@ public class UserServiceImpl implements UserService {
             throw new Exception("User not found with number: " + number);
         }
         return user;
+    }
+
+    @Override
+    public User findByUserId(Long id) throws Exception {
+        return userRepo.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+    }
+
+    @Override
+    public User updateUser(User user) throws Exception {
+        return null;
     }
 }
