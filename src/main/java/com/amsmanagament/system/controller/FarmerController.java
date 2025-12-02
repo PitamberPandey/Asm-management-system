@@ -45,7 +45,7 @@ public class FarmerController {
     }
 
     @PutMapping("/update/farmer")
-    public ResponseEntity<ApiCreateResponse> updateFarmer(@RequestBody Farmer farmer) {
+    public ResponseEntity<ApiCreateResponse> updatedFarmers(@RequestBody Farmer farmer) {
         try {
             // Call the update method in your service
             Farmer updatedFarmer = farmerservice.updateFarmer(farmer);
@@ -53,7 +53,7 @@ public class FarmerController {
             ApiCreateResponse response = new ApiCreateResponse(
                     "Farmer updated successfully",
                     true,
-                    updatedFarmer
+                   updatedFarmer
             );
             return ResponseEntity.ok(response);
 
