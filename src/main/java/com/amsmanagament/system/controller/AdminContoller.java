@@ -2,6 +2,7 @@ package com.amsmanagament.system.controller;
 
 
 
+import com.amsmanagament.system.Response.ApiResponse;
 import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,18 @@ public class AdminContoller {
         return ResponseEntity.ok(user);
     }
 
+    @PutMapping("/user/update")
+    public ResponseEntity<User> updateUser(@RequestBody User user) throws Exception {
+        User updatedUser = userService.updateUser(user);
+        return ResponseEntity.ok(updatedUser);
 
+    }
+
+    @DeleteMapping("/user/delete/{id}")
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long id) throws Exception {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new ApiResponse("User deleted successfully!", true));
+    }
 
 
 

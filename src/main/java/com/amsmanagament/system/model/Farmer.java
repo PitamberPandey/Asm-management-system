@@ -1,9 +1,7 @@
 package com.amsmanagament.system.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,19 +17,34 @@ public class Farmer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true) // allow null user
     private User user;
 
-    private String farmName;
-    private String farmAddress;
+    private String farmerName;
+    private String farmerAddress;
     private String wardNo;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String document;
+    @Enumerated(EnumType.STRING)
+    private Farmer_Status status;
 
     @OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL)
     private List<Product> products;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        if (status==null){
+            status=Farmer_Status.STATUS_PENDING;
+        }
+    }
 
 
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

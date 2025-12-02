@@ -1,31 +1,24 @@
 package com.amsmanagament.system.model;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-
 import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
+@Builder
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String fullName;
-
-    private String phoneNumber;
 
     public long getId() {
         return id;
@@ -67,25 +60,90 @@ public class User {
         this.role = role;
     }
 
-    @JsonProperty(access =JsonProperty.Access.WRITE_ONLY)
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    private String fullName;
+    private String phoneNumber;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private User_Role role=User_Role.ROLE_USER;
 
-    private  String gender;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private User_Role role = User_Role.ROLE_FARM;
 
+    private String gender;
     private String dob;
-    private  String profileImage;
-    private  String address;
-    private String acountStatus="ACTIVE";
-    private String created_at;
-    private String updated_at;
+    private String profileImage;
+    private String address;
+    private String accountStatus = "ACTIVE";
 
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Farmer farmer;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Seller seller;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Farmer> farmer;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Seller> seller;
 
 }
-

@@ -33,8 +33,8 @@ public class Appconfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/signup", "/auth/signin","/send/sendotp","/send/forget-password/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/manager/**").hasAnyRole("MANAGER","ADMIN")
-                        .requestMatchers("/api/user/**").hasAnyRole("USER","ADMIN","MANAGER")
+                        .requestMatchers("/api/farmer/**").hasAnyRole("ADMIN","FARM")
+                        .requestMatchers("/api/buyer/**").hasAnyRole("ADMIN","MANAGER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtValidator, UsernamePasswordAuthenticationFilter.class)
