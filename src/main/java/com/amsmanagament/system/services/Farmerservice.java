@@ -10,4 +10,5 @@ public interface Farmerservice {
     public List<Farmer> findByUsername(String username) throws Exception;
     Farmer createFarmer(Farmer farmer) throws  Exception;
     Farmer updateFarmer(Farmer farmer) throws  Exception;
+   List<Farmer> getallfarmer()throws Exception;
 }

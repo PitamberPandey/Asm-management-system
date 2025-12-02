@@ -2,8 +2,10 @@ package com.amsmanagament.system.serviceImpl;
 
 import com.amsmanagament.system.config.JwtProvider;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
+import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.model.User_Role;
+import com.amsmanagament.system.repo.FarmerRepo;
 import com.amsmanagament.system.repo.UserRepo;
 import com.amsmanagament.system.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,7 +15,7 @@ import org.springframework.boot.rsocket.server.RSocketServerException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
+import java.util.List;
 
 
 @Service
@@ -24,6 +26,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private JwtProvider provider;
+    @Autowired
+    FarmerRepo farmerRepo;
 
     @Override
     @Transactional
@@ -88,4 +92,6 @@ return  userRepo.save(user);
         userRepo.delete(existingUser);
         return existingUser;
     }
+
+
 }

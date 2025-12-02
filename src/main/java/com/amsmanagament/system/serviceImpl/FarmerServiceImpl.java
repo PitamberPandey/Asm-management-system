@@ -59,4 +59,9 @@ public class FarmerServiceImpl implements Farmerservice {
     }
 
 
+
+    @Override
+    public List<Farmer> getallfarmer() throws Exception {
+        return farmerRepo.findAll();
+    }
 }
