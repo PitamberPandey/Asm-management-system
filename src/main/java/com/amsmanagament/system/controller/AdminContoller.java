@@ -2,6 +2,7 @@ package com.amsmanagament.system.controller;
 
 
 
+import com.amsmanagament.system.Response.ApiCreateResponse;
 import com.amsmanagament.system.Response.ApiResponse;
 import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.User;
@@ -58,5 +59,33 @@ public class AdminContoller {
         Farmer user = farmerservice.findById(id);
         return ResponseEntity.ok(user);
     }
+
+    @PostMapping("farmer/verify/{id}")
+    public ResponseEntity<ApiCreateResponse> verifyFarmer(@PathVariable Long id) throws Exception {
+
+        Farmer farmer = farmerservice.verifyFarmer(id);
+
+        ApiCreateResponse apiResponse = new ApiCreateResponse(
+                "Farmer verified successfully",
+                true,
+                farmer
+        );
+
+        return ResponseEntity.ok(apiResponse);
+    }
+    @PostMapping("farmer/reject/{id}")
+    public ResponseEntity<ApiCreateResponse> rejectFarmer(@PathVariable Long id) throws Exception {
+
+        Farmer farmer = farmerservice.rejectFarmer(id);
+
+        ApiCreateResponse apiResponse = new ApiCreateResponse(
+                "Farmer is rejected for improper document",
+                false,
+                farmer
+        );
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
 
 }

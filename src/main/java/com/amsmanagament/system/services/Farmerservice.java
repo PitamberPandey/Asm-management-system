@@ -11,4 +11,6 @@ public interface Farmerservice {
     Farmer createFarmer(Farmer farmer) throws  Exception;
     Farmer updateFarmer(Farmer farmer) throws  Exception;
    List<Farmer> getallfarmer()throws Exception;
+   Farmer verifyFarmer(Long id) throws  Exception;
+    Farmer rejectFarmer(Long id) throws  Exception;
 }

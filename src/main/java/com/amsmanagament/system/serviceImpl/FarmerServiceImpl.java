@@ -64,4 +64,20 @@ public class FarmerServiceImpl implements Farmerservice {
     public List<Farmer> getallfarmer() throws Exception {
         return farmerRepo.findAll();
     }
+
+    @Override
+    public Farmer verifyFarmer(Long id) throws Exception {
+        Farmer findFarmer=farmerRepo.findById(id).orElseThrow(()->new RuntimeException("farmer not found this id"+id));
+        findFarmer.setStatus(Farmer_Status.STATUS_ACCEPTED);
+
+        return farmerRepo.save(findFarmer);
+    }
+
+    @Override
+    public Farmer rejectFarmer(Long id) throws Exception {
+        Farmer findFarmer=farmerRepo.findById(id).orElseThrow(()->new RuntimeException("farmer not found this id"+id));
+        findFarmer.setStatus(Farmer_Status.STATUS_NOT_ACCEPTED);
+
+        return farmerRepo.save(findFarmer);
+    }
 }
