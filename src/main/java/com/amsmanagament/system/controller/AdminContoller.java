@@ -4,8 +4,10 @@ package com.amsmanagament.system.controller;
 
 import com.amsmanagament.system.Response.ApiCreateResponse;
 import com.amsmanagament.system.Response.ApiResponse;
+import com.amsmanagament.system.model.Buyer;
 import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.User;
+import com.amsmanagament.system.services.BuyerServices;
 import com.amsmanagament.system.services.Farmerservice;
 import com.amsmanagament.system.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class AdminContoller {
 
     @Autowired
     Farmerservice farmerservice;
+
+    @Autowired
+    BuyerServices buyerServices;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) throws Exception {
@@ -87,5 +92,21 @@ public class AdminContoller {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @GetMapping("/buyer/{id}")
+    public ResponseEntity<Buyer> getBuyerById(@PathVariable Long id) throws Exception {
+        Buyer user = buyerServices.getBuyerById(id);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/buyer")
+    public  List<Buyer> getAllBuyer() throws Exception {
+        return buyerServices.getAllBuyers();
+    }
+
+    @DeleteMapping("/buyer/delete/{id}")
+    public ResponseEntity<ApiResponse> deleteBuyer(@PathVariable Long id) throws Exception {
+        buyerServices.deleteBuyer(id);
+        return ResponseEntity.ok(new ApiResponse("Buyer deleted successfully!", true));
+    }
 
 }

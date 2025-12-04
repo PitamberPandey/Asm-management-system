@@ -1,6 +1,7 @@
 package com.amsmanagament.system.repo;
 
 import com.amsmanagament.system.model.Farmer;
+import com.amsmanagament.system.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,8 +15,8 @@ public interface FarmerRepo extends JpaRepository<Farmer,Long> {
 
     Optional<Farmer> findById(Long id);
 
-    Optional<Farmer> findByFarmerName(String farmerName);
 
+    boolean existsByUser(User user);
 
 
     @Query("SELECT f FROM Farmer f WHERE LOWER(f.farmerName) LIKE LOWER(CONCAT('%', :name, '%'))")

@@ -1,5 +1,6 @@
 package com.amsmanagament.system.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -141,9 +142,15 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Farmer> farmer;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Seller> seller;
+
+    public String orElseThrow(Object o) {
+        return "";
+    }
+
 
 }

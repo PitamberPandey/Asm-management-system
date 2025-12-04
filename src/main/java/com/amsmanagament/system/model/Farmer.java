@@ -1,5 +1,7 @@
 package com.amsmanagament.system.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -18,7 +20,8 @@ public class Farmer {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true) // allow null user
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference// allow null user
     private User user;
 
     private String farmerName;

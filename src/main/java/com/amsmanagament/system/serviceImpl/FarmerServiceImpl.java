@@ -3,19 +3,26 @@ package com.amsmanagament.system.serviceImpl;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.Farmer_Status;
+import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.repo.FarmerRepo;
+import com.amsmanagament.system.repo.UserRepo;
 import com.amsmanagament.system.services.Farmerservice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FarmerServiceImpl implements Farmerservice {
 
     @Autowired
     FarmerRepo farmerRepo;
+
+    @Autowired
+    UserRepo userRepo;
 
 
     @Override
@@ -30,23 +37,33 @@ public class FarmerServiceImpl implements Farmerservice {
     }
     @Override
     public Farmer createFarmer(Farmer farmer) throws Exception {
-        if (farmerRepo.findByFarmerName(farmer.getFarmerName()).isPresent()) {
-            throw new Exception("Farmer with this name already exists");
+        // Get logged-in user's phone number from Spring Security
+        String phoneNumber = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Fetch the full User entity from the database
+        User loggedInUser = userRepo.findByPhoneNumber(phoneNumber);
+        if (loggedInUser == null) {
+            throw new Exception("Logged-in user not found");
         }
 
+        // Check if the user already has a farmer profile
+        if (farmerRepo.existsByUser(loggedInUser)) {
+            throw new Exception("You have already created a farmer profile.");
+        }
+
+        // Create and save new Farmer
         Farmer farmerToSave = new Farmer();
         farmerToSave.setFarmerName(farmer.getFarmerName());
         farmerToSave.setFarmerAddress(farmer.getFarmerAddress());
         farmerToSave.setWardNo(farmer.getWardNo());
-        farmerToSave.setUser(farmer.getUser());
+        farmerToSave.setUser(loggedInUser); // important to avoid null user
         farmerToSave.setDocument(farmer.getDocument());
-       farmerToSave.setStatus(Farmer_Status.STATUS_PENDING);
-        farmerToSave.setCreatedAt(LocalDateTime.now());
-        farmerToSave.setUpdatedAt(LocalDateTime.now());
+        farmerToSave.setStatus(Farmer_Status.STATUS_PENDING);
 
-        // Save the correct object
-        return farmerRepo.save(farmer);
+        return farmerRepo.save(farmerToSave);
     }
+
+
 
     @Override
     public Farmer updateFarmer(Farmer farmer) throws Exception {
@@ -55,6 +72,7 @@ public class FarmerServiceImpl implements Farmerservice {
         exitinguser.setFarmerAddress(farmer.getFarmerAddress());
         exitinguser.setDocument(farmer.getDocument());
         exitinguser.setWardNo(farmer.getWardNo());
+
         return farmerRepo.save(exitinguser);
     }
 
