@@ -4,10 +4,13 @@ package com.amsmanagament.system.controller;
 
 import com.amsmanagament.system.Response.ApiCreateResponse;
 import com.amsmanagament.system.Response.ApiResponse;
+import com.amsmanagament.system.Response.ApiResponseCategory;
 import com.amsmanagament.system.model.Buyer;
+import com.amsmanagament.system.model.Category;
 import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.services.BuyerServices;
+import com.amsmanagament.system.services.CategoryService;
 import com.amsmanagament.system.services.Farmerservice;
 import com.amsmanagament.system.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class AdminContoller {
 
     @Autowired
     BuyerServices buyerServices;
+
+    @Autowired
+    CategoryService categoryService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) throws Exception {
@@ -107,6 +113,18 @@ public class AdminContoller {
     public ResponseEntity<ApiResponse> deleteBuyer(@PathVariable Long id) throws Exception {
         buyerServices.deleteBuyer(id);
         return ResponseEntity.ok(new ApiResponse("Buyer deleted successfully!", true));
+    }
+
+    @GetMapping("/buyer/search")
+    public List<Buyer> searchBuyersByName(@RequestParam String name) throws Exception {
+        return buyerServices.searchBuyersByName(name);
+    }
+
+    @PostMapping("/create/category")
+    public ResponseEntity<ApiResponseCategory> createCategory(@RequestBody Category category) throws Exception {
+        Category createdCategory = categoryService.createCategory(category);
+        ApiResponseCategory apiResponse = new ApiResponseCategory("Category created successfully", true, createdCategory);
+        return ResponseEntity.ok(apiResponse);
     }
 
 }

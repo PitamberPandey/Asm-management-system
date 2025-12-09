@@ -31,7 +31,7 @@ public class Appconfig {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/signup", "/auth/signin","/send/sendotp","/send/forget-password/**").permitAll()
+                        .requestMatchers("/auth/signup", "/auth/signin","/send/sendotp","/send/forget-password/**","catagories").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/farmer/**").hasAnyRole("ADMIN","FARM")
                         .requestMatchers("/api/buyer/**").hasAnyRole("ADMIN","BUYER")

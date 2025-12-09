@@ -14,12 +14,12 @@ public interface ByerRepo extends JpaRepository<Buyer,Long> {
      Optional<Buyer> findById(Long id) ;
     Optional<Buyer> findByFullName(String buyerName) throws  Exception;
 
-//    boolean exitsByUser(User user);
+    boolean existsByUser(User user);
 //
 //
 //
-//    @Query("SELECT f FROM Buyer f WHERE LOWER(f.fullName) LIKE LOWER(CONCAT('%', :name, '%'))")
-//    List<Buyer> findByUsername(@Param("name") String name);
+    @Query("SELECT f FROM Buyer f WHERE LOWER(f.fullName) LIKE LOWER(CONCAT('%', :name, '%'))")
+    List<Buyer> findByUsername(@Param("name") String name);
 
 
 }

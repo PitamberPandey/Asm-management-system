@@ -16,4 +16,5 @@ public interface BuyerServices {
 
     List<Buyer> getAllBuyers() throws Exception;
 
+  List<Buyer> searchBuyersByName(String name) throws Exception;
 }

@@ -1,5 +1,6 @@
 package com.amsmanagament.system.serviceImpl;
 
+import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Buyer;
 import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.repo.ByerRepo;
@@ -37,16 +38,17 @@ public class BuyerServiceImpl implements BuyerServices {
             throw new Exception("Logged-in user not found");
         }
 
-        // Check if the user already has a farmer profile
-//        if (farmerRepo.exitsByUser(loggedInUser)) {
-//            throw new Exception("You have already created a farmer profile.");
-//        }
+
+        if (buyerRepository.existsByUser(loggedInUser)) {
+            throw new ResourceNotFoundException("you have already crated a buyer profile");
+        }
 
         Buyer newBuyer = new Buyer();
         newBuyer.setFullName(buyer.getFullName());
         newBuyer.setAddress(buyer.getAddress());
         newBuyer.setUser(buyer.getUser());
         newBuyer.setContactNumber(buyer.getContactNumber());
+        newBuyer.setUser(loggedInUser);
         newBuyer.setUpdatedAt(LocalDateTime.now());
 
         return buyerRepository.save(newBuyer); // ✅ Save the new object
@@ -96,6 +98,15 @@ public class BuyerServiceImpl implements BuyerServices {
             return buyerRepository.findAll();
         } catch (Exception e) {
             throw new Exception("Failed to fetch buyers: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Buyer> searchBuyersByName(String name) throws Exception {
+        try {
+            return buyerRepository.findByUsername(name);
+        } catch (Exception e) {
+            throw new Exception("Failed to search buyers by name: " + e.getMessage());
         }
     }
 }
