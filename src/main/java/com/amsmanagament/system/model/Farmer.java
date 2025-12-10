@@ -50,4 +50,6 @@ public class Farmer {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+
 }
