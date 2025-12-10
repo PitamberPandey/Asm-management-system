@@ -126,5 +126,25 @@ public class AdminContoller {
         ApiResponseCategory apiResponse = new ApiResponseCategory("Category created successfully", true, createdCategory);
         return ResponseEntity.ok(apiResponse);
     }
+    @PutMapping("/update/category")
+    public ResponseEntity<ApiResponseCategory> updateCategory(@RequestBody Category category) throws Exception {
+        Category updatedCategory = categoryService.updateCatogory(category);
+        ApiResponseCategory apiResponse = new ApiResponseCategory("Category updated successfully", true, updatedCategory);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @DeleteMapping("/delete/category/{id}")
+    public ResponseEntity<ApiResponseCategory> deleteCategory(@PathVariable Long id) throws Exception {
+        Category deletedCategory = categoryService.deleteByCategoryid(id);
+        ApiResponseCategory apiResponse = new ApiResponseCategory("Category deleted successfully", true, deletedCategory);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/search/category")
+    public ResponseEntity<ApiResponseCategory> searchCategoryByName(@RequestParam String name) throws Exception {
+        Category category = categoryService.searchbycatorgoryname(name);
+        ApiResponseCategory apiResponse = new ApiResponseCategory("Category found successfully", true, category);
+        return ResponseEntity.ok(apiResponse);
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.amsmanagament.system.repo;
 
 import com.amsmanagament.system.model.Category;
+import com.amsmanagament.system.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,7 +12,7 @@ public interface CatogoriesRepo extends JpaRepository<Category,Long> {
     Optional<Category> findById(Long id);
 
 
-//        boolean existsByCreatedBy(User user);
+
 
        @Query
          (value = "SELECT c FROM Category c WHERE c.categoryName = ?1")

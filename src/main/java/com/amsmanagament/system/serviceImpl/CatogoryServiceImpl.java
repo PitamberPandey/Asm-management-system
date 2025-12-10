@@ -24,7 +24,9 @@ public class CatogoryServiceImpl implements CategoryService {
     public Category createCategory(Category category) throws Exception {
         String phoneNumber= SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User loggedInUser=userRepo.findByPhoneNumber(phoneNumber);
-
+if(catogoriesRepo.findByCategoryName(category.getCategoryName()).isPresent()){
+    throw new ResourceNotFoundException("Category with name "+category.getCategoryName()+" already exists");
+}
 
         Category newCategory=new Category();
         newCategory.setCategoryName(category.getCategoryName());
@@ -33,7 +35,7 @@ public class CatogoryServiceImpl implements CategoryService {
 
 
 
-        return  catogoriesRepo.save(category);
+        return  catogoriesRepo.save(newCategory);
     }
 
     @Override
@@ -58,6 +60,6 @@ public class CatogoryServiceImpl implements CategoryService {
 
     @Override
     public Category searchbycatorgoryname(String name) throws Exception {
-        return catogoriesRepo.findByCategoryName(name).orElseThrow(()->new Exception("Category not found"));
+        return catogoriesRepo.findByCategoryName(name).orElseThrow(()->new ResourceNotFoundException("Category not found"));
     }
 }

@@ -27,6 +27,7 @@ public class Product {
 
     private String productName;
     private Double price;
+    private boolean available;
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
