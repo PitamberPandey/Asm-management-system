@@ -2,6 +2,7 @@ package com.amsmanagament.system.repo;
 
 
 
+import com.amsmanagament.system.model.Category;
 import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.Product;
 import com.amsmanagament.system.model.User;
@@ -24,8 +25,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     List<Product> findByProductNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String nameKeyword, String descKeyword);
 
     // Optional: Find products by category
-    List<Product> findByCategoryId(Long categoryId);
+    List<Product> findByCategory(Category category);
 
-    // Optional: Find products created by a specific user
-    List<Product> findByFarmer(Farmer farmer);
+
+
 }

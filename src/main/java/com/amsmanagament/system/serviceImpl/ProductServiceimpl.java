@@ -4,31 +4,23 @@ import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Category;
 import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.Product;
+import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.repo.CatogoriesRepo;
+import com.amsmanagament.system.repo.FarmerRepo;
+import com.amsmanagament.system.repo.ProductRepo;
 import com.amsmanagament.system.repo.UserRepo;
-import com.amsmanagament.system.services.Farmerservice;
 import com.amsmanagament.system.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class ProductServiceimpl implements ProductService {
-
-    @Autowired
-    UserRepo userRepo;
-
-    @Autowired
-    Farmerservice farmerservice;
-
-    @Autowired
-    CatogoriesRepo catogoriesRepo;
-
     @Override
-    public Product createProduct(Product product, Long id) throws Exception {
-
-
-
-
+    public Product createProduct(Product product) throws Exception {
         return null;
     }
 
@@ -66,4 +58,10 @@ public class ProductServiceimpl implements ProductService {
     public List<Product> getProductsBySeller(Long userId) {
         return List.of();
     }
+
+
+////
+
+
 }
+

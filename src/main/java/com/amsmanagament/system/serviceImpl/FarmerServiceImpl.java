@@ -84,6 +84,13 @@ public class FarmerServiceImpl implements Farmerservice {
     }
 
     @Override
+    public Farmer finduser(User user) throws Exception {
+        return farmerRepo.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Farmer not found for user with ID " + user.getId()));
+    }
+
+    @Override
     public Farmer verifyFarmer(Long id) throws Exception {
         Farmer findFarmer=farmerRepo.findById(id).orElseThrow(()->new RuntimeException("farmer not found this id"+id));
         findFarmer.setStatus(Farmer_Status.STATUS_ACCEPTED);

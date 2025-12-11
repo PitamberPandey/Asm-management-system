@@ -3,9 +3,12 @@ package com.amsmanagament.system.controller;
 
 import com.amsmanagament.system.Response.ApiCreateResponse;
 import com.amsmanagament.system.Response.ApiResponse;
+import com.amsmanagament.system.Response.ApiResponseProduct;
 import com.amsmanagament.system.model.Farmer;
 
+import com.amsmanagament.system.model.Product;
 import com.amsmanagament.system.services.Farmerservice;
+import com.amsmanagament.system.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,9 @@ public class FarmerController {
 
     @Autowired
     Farmerservice farmerservice;
+
+    @Autowired
+    ProductService productService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<Farmer> getUserById(@PathVariable Long id) throws Exception {
@@ -35,10 +41,10 @@ public class FarmerController {
     public ResponseEntity<ApiCreateResponse> createFarmer(@RequestBody Farmer farmer) {
         try {
             Farmer createdFarmer = farmerservice.createFarmer(farmer);
-            ApiCreateResponse response = new ApiCreateResponse( "Farmer created successfully",true,createdFarmer);
+            ApiCreateResponse response = new ApiCreateResponse("Farmer created successfully", true, createdFarmer);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            ApiCreateResponse response = new ApiCreateResponse( "Failed to create farmer: " + e.getMessage(), false,null);
+            ApiCreateResponse response = new ApiCreateResponse("Failed to create farmer: " + e.getMessage(), false, null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
@@ -53,7 +59,7 @@ public class FarmerController {
             ApiCreateResponse response = new ApiCreateResponse(
                     "Farmer updated successfully",
                     true,
-                   updatedFarmer
+                    updatedFarmer
             );
             return ResponseEntity.ok(response);
 
@@ -67,7 +73,23 @@ public class FarmerController {
         }
     }
 
+    @PostMapping("/create/product")
+    public ResponseEntity<ApiResponseProduct> createProduct(@RequestBody Product product) {
+        try {
+
+
+
+            Product createdProduct = productService.createProduct(product);
+
+            return ResponseEntity.ok(new ApiResponseProduct("Product created successfully", true, createdProduct));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponseProduct("Failed to create product: " + e.getMessage(), false, null));
+        }
+    }
+
 }
+
 
 
 
