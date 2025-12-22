@@ -73,20 +73,8 @@ public class FarmerController {
         }
     }
 
-    @PostMapping("/create/product")
-    public ResponseEntity<ApiResponseProduct> createProduct(@RequestBody Product product) {
-        try {
 
 
-
-            Product createdProduct = productService.createProduct(product);
-
-            return ResponseEntity.ok(new ApiResponseProduct("Product created successfully", true, createdProduct));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseProduct("Failed to create product: " + e.getMessage(), false, null));
-        }
-    }
 
 }
 
