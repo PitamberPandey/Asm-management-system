@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductService {
 
     // Create a new product
-    Product createProduct(Product product,Integer userid) throws Exception;
+    Product createProduct(Product product) throws Exception;
 
     // Update existing product
     Product updateProduct(Long productId, Product product) throws Exception;

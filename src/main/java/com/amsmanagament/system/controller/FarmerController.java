@@ -2,8 +2,9 @@ package com.amsmanagament.system.controller;
 
 
 import com.amsmanagament.system.Response.ApiCreateResponse;
-import com.amsmanagament.system.Response.ApiResponse;
-import com.amsmanagament.system.Response.ApiResponseProduct;
+
+
+import com.amsmanagament.system.Response.ProductResponse;
 import com.amsmanagament.system.model.Farmer;
 
 import com.amsmanagament.system.model.Product;
@@ -73,10 +74,71 @@ public class FarmerController {
         }
     }
 
+    @PostMapping("/create/product")
+    public ResponseEntity<ProductResponse> createproduct( @RequestBody  Product product) {
+        try {
+            Product createdProduct = productService.createProduct(product);
+            ProductResponse response = new ProductResponse("Product created successfully", true, createdProduct);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ProductResponse response = new ProductResponse("Product created failed"+e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 
+    @PutMapping("/update/product/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable("id") Long productId,
+            @RequestBody Product product
+    ) {
+        try {
+            // set id to product to ensure correct update
+          product.getId();
+            Product updatedProduct = productService.updateProduct( productId, product);
+
+            ProductResponse response = new ProductResponse(
+                    "Product updated successfully",
+                    true,
+                    updatedProduct
+            );
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            ProductResponse response = new ProductResponse(
+                    "Failed to update product: " + e.getMessage(),
+                    false,
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+     @DeleteMapping("/delete/product/{id}")
+    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable ("id") Long id) {
+         try {
+              productService.deleteProduct(id);
+             ProductResponse response = new ProductResponse("Product deleted successfully", true, null);
+             return ResponseEntity.ok(response);
+         } catch (Exception e) {
+             ProductResponse response = new ProductResponse("Failed to delete product: " + e.getMessage(), false, null);
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+         }
+     }
+
+    @GetMapping("/get/products/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws Exception {
+
+        Product product = productService.getProductById(id);
+
+        return ResponseEntity.ok(product);
+    }
 
 
 }
+
+
+
+
+
 
 
 

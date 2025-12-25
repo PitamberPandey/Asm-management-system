@@ -1,6 +1,7 @@
 package com.amsmanagament.system.serviceImpl;
 
 
+import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Category;
 import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.Product;
@@ -16,8 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Service
@@ -35,27 +37,34 @@ ProductRepo productRepo;
     CatogoriesRepo catogoriesRepo;
 
 
+
     @Override
-    public Product createProduct(Product product, Integer userid) throws Exception {
-        String phoneNumber= SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User loggedInUser=userRepo.findByPhoneNumber(phoneNumber);
-        Farmer farmer=farmerRepo.findByUser(loggedInUser).orElseThrow(()->new Exception("Farmer profile not found for the logged-in user"));
-        if(loggedInUser==null){
+    public Product createProduct(Product product) throws Exception {
+        String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User loggedInUser = userRepo.findByPhoneNumber(phoneNumber);
+
+        if (loggedInUser == null) {
             throw new Exception("Logged in user not found");
         }
-        Product product1=productRepo.findByCategory(product.getCategory()).stream().findFirst().orElseThrow(()->new Exception("Product not found on this catogroy"));
-        product1.setId(product.getId());
-        product1.setCategory(product.getCategory());
-        product1.setDescription(product.getDescription());
-        product1.setPrice(product.getPrice());
-        product1.setProductName(product.getProductName());
-        product1.setFarmer(farmer);
-        
-        
-                
+        Farmer farmer = farmerRepo.findByUser(loggedInUser)
+                .orElseThrow(() -> new Exception("Farmer profile not found for the logged-in user"));
 
-        return productRepo.save(product1);
+
+
+        Product newProduct = new Product();
+        newProduct.setProductName(product.getProductName());
+        newProduct.setDescription(product.getDescription());
+        newProduct.setPrice(product.getPrice());
+        newProduct.setAvailable(product.isAvailable());
+        newProduct.setImageUrl(product.getImageUrl());
+        newProduct.setCategory(product.getCategory()); // expects nested JSON { "id": 5 }
+        newProduct.setFarmer(farmer);
+        newProduct.setCreatedAt(LocalDateTime.now());
+        newProduct.setUpdatedAt(LocalDateTime.now());
+
+        return productRepo.save(newProduct);
     }
+
 
     @Override
     public Product updateProduct(Long productId, Product product) throws Exception {
@@ -79,7 +88,7 @@ ProductRepo productRepo;
 
     @Override
     public Product getProductById(Long productId) throws Exception {
-        Product product=productRepo.findById(productId).orElseThrow(()->new Exception("Product not found"));
+        Product product=productRepo.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product not found"));
         return product;
     }
 
@@ -93,7 +102,7 @@ ProductRepo productRepo;
     public List<Product> searchProducts(String keyword) {
         List<Product> searchProduct=productRepo.findByProductNameContainingIgnoreCase(keyword);
         if (searchProduct.isEmpty()) {
-            throw new RuntimeException("Product not found with keyword: " + keyword);
+            throw new ResourceNotFoundException("Product not found with keyword: " + keyword);
         }
 
 
@@ -138,7 +147,7 @@ ProductRepo productRepo;
 
 
 
-////
+
 
 
 }

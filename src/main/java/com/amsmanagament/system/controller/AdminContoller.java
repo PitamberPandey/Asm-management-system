@@ -5,14 +5,8 @@ package com.amsmanagament.system.controller;
 import com.amsmanagament.system.Response.ApiCreateResponse;
 import com.amsmanagament.system.Response.ApiResponse;
 import com.amsmanagament.system.Response.ApiResponseCategory;
-import com.amsmanagament.system.model.Buyer;
-import com.amsmanagament.system.model.Category;
-import com.amsmanagament.system.model.Farmer;
-import com.amsmanagament.system.model.User;
-import com.amsmanagament.system.services.BuyerServices;
-import com.amsmanagament.system.services.CategoryService;
-import com.amsmanagament.system.services.Farmerservice;
-import com.amsmanagament.system.services.UserService;
+import com.amsmanagament.system.model.*;
+import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +28,9 @@ public class AdminContoller {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    ProductService productService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) throws Exception {
@@ -145,6 +142,16 @@ public class AdminContoller {
         Category category = categoryService.searchbycatorgoryname(name);
         ApiResponseCategory apiResponse = new ApiResponseCategory("Category found successfully", true, category);
         return ResponseEntity.ok(apiResponse);
+
     }
+
+
+    @GetMapping("/seller/{id}")
+    public ResponseEntity<Product> getProductsBySeller(@PathVariable Long id) throws Exception {
+        List<Product> products = productService.getProductsBySeller(id);
+        return ResponseEntity.ok().body((products.get(0)));
+    }
+
+
 
 }

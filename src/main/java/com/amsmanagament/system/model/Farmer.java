@@ -34,7 +34,10 @@ public class Farmer {
     private Farmer_Status status;
 
     @OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Product> products;
+
+
 
     @PrePersist
     protected void onCreate() {

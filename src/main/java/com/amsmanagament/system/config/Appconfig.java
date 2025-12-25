@@ -32,6 +32,10 @@ public class Appconfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/signup", "/auth/signin","/send/sendotp","/send/forget-password/**","/catagories/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/farmer/**").hasAnyRole("ADMIN","FARM")
                         .requestMatchers("/api/buyer/**").hasAnyRole("ADMIN","BUYER")

@@ -148,6 +148,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Seller> seller;
 
+
     public String orElseThrow(Object o) {
         return "";
     }
