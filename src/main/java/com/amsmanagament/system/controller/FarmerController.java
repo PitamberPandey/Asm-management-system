@@ -5,11 +5,14 @@ import com.amsmanagament.system.Response.ApiCreateResponse;
 
 
 import com.amsmanagament.system.Response.ProductResponse;
+import com.amsmanagament.system.Response.SellerResponse;
 import com.amsmanagament.system.model.Farmer;
 
 import com.amsmanagament.system.model.Product;
+import com.amsmanagament.system.model.Seller;
 import com.amsmanagament.system.services.Farmerservice;
 import com.amsmanagament.system.services.ProductService;
+import com.amsmanagament.system.services.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,10 @@ public class FarmerController {
 
     @Autowired
     ProductService productService;
+
+
+    @Autowired
+    SellerService sellerService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<Farmer> getUserById(@PathVariable Long id) throws Exception {
@@ -130,6 +137,31 @@ public class FarmerController {
         Product product = productService.getProductById(id);
 
         return ResponseEntity.ok(product);
+    }
+
+    @PostMapping("/create/seller")
+    public ResponseEntity<SellerResponse> createSeller(@RequestBody Seller seller) throws Exception {
+        try {
+            Seller seller1 = sellerService.createSeller(seller);
+            SellerResponse sellerResponse=new SellerResponse("seller create successful",true,seller1);
+            return ResponseEntity.ok(sellerResponse);
+        } catch (Exception e) {
+            SellerResponse sellerResponse=new SellerResponse(" failed  create seller",false,null);
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sellerResponse);
+        }
+
+
+    }
+    @PostMapping("/update/seller")
+    public ResponseEntity<SellerResponse> UpdateSeller(@RequestBody Seller seller) throws Exception {
+        try {
+            Seller seller1 = sellerService.updateSeller(seller);
+            SellerResponse sellerResponse = new SellerResponse("seller update successful", true, seller1);
+            return ResponseEntity.ok(sellerResponse);
+        } catch (Exception e) {
+            SellerResponse sellerResponse = new SellerResponse(" failed  for update seller", false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sellerResponse);
+        }
     }
 
 

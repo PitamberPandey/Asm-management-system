@@ -21,11 +21,13 @@ public class Seller {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String shopName;
+    private String farmername;
     private String shopAddress;
     private String contactNumber;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private double latitude;
+    private double longitude;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<Inventory> inventories;

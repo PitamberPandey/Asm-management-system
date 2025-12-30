@@ -5,9 +5,12 @@ package com.amsmanagament.system.controller;
 import com.amsmanagament.system.Response.ApiCreateResponse;
 import com.amsmanagament.system.Response.ApiResponse;
 import com.amsmanagament.system.Response.ApiResponseCategory;
+import com.amsmanagament.system.Response.SellerResponse;
+import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +34,10 @@ public class AdminContoller {
 
     @Autowired
     ProductService productService;
+
+
+    @Autowired
+    SellerService sellerService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) throws Exception {
@@ -146,12 +153,43 @@ public class AdminContoller {
     }
 
 
-    @GetMapping("/seller/{id}")
-    public ResponseEntity<Product> getProductsBySeller(@PathVariable Long id) throws Exception {
+    @GetMapping("/farmer/product/{id}")
+    public ResponseEntity<Product> getProductsByfarmer(@PathVariable Long id) throws Exception {
         List<Product> products = productService.getProductsBySeller(id);
         return ResponseEntity.ok().body((products.get(0)));
     }
 
 
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<SellerResponse> deleteSeller(@PathVariable("id") Long id) throws Exception {
+        try {
+            Seller seller1 = sellerService.deleteSeller(id);
+            SellerResponse sellerResponse = new SellerResponse("seller delete successfully", true, seller1);
+            return ResponseEntity.ok(sellerResponse);
+        } catch (Exception e) {
+            SellerResponse sellerResponse = new SellerResponse(" failed  for deleteUser seller", false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sellerResponse);
+        }
+
+
+    }
+
+    @GetMapping("/seller")
+    public List<Seller> sellers() throws Exception {
+        List<Seller> sellers=sellerService.getAllSellers();
+        return sellers;
+    }
+
+
+    @GetMapping("seller/{id}")
+        public Seller getSeller(@PathVariable("id") Long id) throws Exception {
+        try {
+            Seller seller = sellerService.getSellerById(id);
+            return seller;
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("seller not found this id" + id);
+        }
+
+    }
 
 }

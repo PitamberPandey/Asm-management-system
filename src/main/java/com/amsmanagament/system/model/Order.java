@@ -22,6 +22,7 @@ public class Order {
     private User user;
 
     private LocalDateTime orderDate;
+    private LocalDateTime orderupdatedate;
     private Double totalAmount;
     private String status; // PENDING, COMPLETED, CANCELLED
 
@@ -31,5 +32,8 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "buyer_id")
     private Buyer buyer;
+    private Double latitude;   // e.g., 27.700769 for Kathmandu
+    private Double longitude;  // e.g., 85.300140 for Kathmandu
+
 }
 

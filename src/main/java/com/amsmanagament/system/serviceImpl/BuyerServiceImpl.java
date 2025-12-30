@@ -109,4 +109,6 @@ public class BuyerServiceImpl implements BuyerServices {
             throw new Exception("Failed to search buyers by name: " + e.getMessage());
         }
     }
+
+
 }
