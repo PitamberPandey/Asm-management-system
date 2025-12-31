@@ -72,10 +72,11 @@ public class OrderServiceImpl implements OrderServices {
 
     // ---------------- DELETE ORDER ----------------
     @Override
-    public void deleteOrder(Long id) {
+    public Order deleteOrder(Long id) {
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
         orderRepo.delete(order);
+        return order;
     }
 
     // ---------------- GET ALL ORDERS ----------------

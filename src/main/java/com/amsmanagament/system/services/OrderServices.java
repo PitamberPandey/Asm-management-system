@@ -9,26 +9,26 @@ public interface OrderServices {
 
     Order createOrder(Order order) throws Exception;
 
-    Order updateOrder(Long id, Order order) throws Exception;
+    Order updateOrder(Long id, Order order) throws Exception;//admin
 
-    void deleteOrder(Long id) throws Exception;
+    Order deleteOrder(Long id) throws Exception;//admin
 
-    List<Order> getAllOrders() throws Exception;
+    List<Order> getAllOrders() throws Exception;//admin
 
-    Optional<Order> getOrderById(Long id) throws Exception;
+    Optional<Order> getOrderById(Long id) throws Exception;//admin
 
-    List<Order> getOrdersByUserId(Long userId) throws Exception;
+    List<Order> getOrdersByUserId(Long userId) throws Exception;//admin
 
-    Order updateOrderStatus(Long id, String status)throws Exception;
+    Order updateOrderStatus(Long id, String status)throws Exception;//admin
 
-    Order trackOrder(Long id) throws Exception;
+    Order trackOrder(Long id) throws Exception;//admim
 
-    Order verifyOrder(Long id)throws Exception;
+    Order verifyOrder(Long id)throws Exception;//admin
 
-    Order cancelOrder(Long id)throws  Exception;
+    Order cancelOrder(Long id)throws  Exception;//buyer
 
-    Double calculateOrderTotal(Long orderId)throws  Exception;
-    Order trackOrderLocation(Long orderId) throws  Exception;
+    Double calculateOrderTotal(Long orderId)throws  Exception;//admin
+    Order trackOrderLocation(Long orderId) throws  Exception;//buyer
 
 
 

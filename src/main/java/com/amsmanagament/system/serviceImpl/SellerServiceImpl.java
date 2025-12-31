@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,6 +20,7 @@ public class SellerServiceImpl implements SellerService {
 
     @Autowired
     SellerRepo sellerRepo;
+
     @Override
     public Seller createSeller(Seller seller) throws Exception {
         // Get authenticated user's phone number
@@ -44,12 +46,12 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public Seller updateSeller(Seller seller) throws Exception {
-        Seller seller1=sellerRepo.findById(seller.getId()).orElseThrow(()->new RuntimeException("not exits"));
+        Seller seller1 = sellerRepo.findById(seller.getId()).orElseThrow(() -> new RuntimeException("not exits"));
         seller1.setFarmername(seller.getFarmername());
 
         seller1.setLatitude(seller.getLatitude());
         seller1.setLongitude(seller.getLongitude());
-         // Link User to Seller
+        // Link User to Seller
 
 
         return sellerRepo.save(seller1);
@@ -57,15 +59,15 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public Seller getSellerById(Long id) throws Exception {
-        Seller user=sellerRepo.findById(id).orElseThrow(()->new RuntimeException("seller not found this id"));
+        Seller user = sellerRepo.findById(id).orElseThrow(() -> new RuntimeException("seller not found this id"));
         return user;
     }
 
     @Override
     public Seller deleteSeller(Long id) throws Exception {
-        Seller seller=sellerRepo.findById(id).orElseThrow(()->new RuntimeException("Seller not found this id"));
+        Seller seller = sellerRepo.findById(id).orElseThrow(() -> new RuntimeException("Seller not found this id"));
         sellerRepo.delete(seller);
-        return seller ;
+        return seller;
     }
 
     @Override
@@ -75,9 +77,9 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public List<Seller> searchSellersByName(String name) throws Exception {
-        List<Seller> users=sellerRepo.findByFarmernameContainingIgnoreCase(name);
-        if (users==null){
-            throw  new RuntimeException("User not found");
+        List<Seller> users = sellerRepo.findByFarmernameContainingIgnoreCase(name);
+        if (users == null) {
+            throw new RuntimeException("User not found");
 
         }
         return users;
@@ -85,6 +87,40 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public List<Seller> findSellersInRange(double latitude, double longitude, double radiusKm) {
-        return List.of();
+
+        // Get all sellers from DB (however you load them)
+        List<Seller> allSellers = sellerRepo.findAll();
+
+        List<Seller> sellersInRange = new ArrayList<>();
+
+        for (Seller seller : allSellers) {
+
+            double sellerLat = seller.getLatitude();
+            double sellerLon = seller.getLongitude();
+
+            double distance = distanceInKm(latitude, longitude, sellerLat, sellerLon);
+
+            if (distance <= radiusKm) {
+                sellersInRange.add(seller);
+            }
+        }
+
+        return sellersInRange;
+    }
+
+    // Haversine formula
+    private double distanceInKm(double lat1, double lon1, double lat2, double lon2) {
+        final double EARTH_RADIUS = 6371.0; // in km
+
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS * c;
     }
 }

@@ -2,19 +2,18 @@ package com.amsmanagament.system.controller;
 
 
 
-import com.amsmanagament.system.Response.ApiCreateResponse;
-import com.amsmanagament.system.Response.ApiResponse;
-import com.amsmanagament.system.Response.ApiResponseCategory;
-import com.amsmanagament.system.Response.SellerResponse;
+import com.amsmanagament.system.Response.*;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.OrderUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -38,6 +37,9 @@ public class AdminContoller {
 
     @Autowired
     SellerService sellerService;
+
+    @Autowired
+    OrderServices orderServices;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) throws Exception {
@@ -191,5 +193,80 @@ public class AdminContoller {
         }
 
     }
+
+    @PostMapping("/update/order/{id}")
+    public ResponseEntity<ApiOrderResponse> Updateorder(@RequestBody Order order,@PathVariable("id") Long id) throws Exception{
+        try {
+            Order order1 =orderServices.updateOrder(id, order);
+            ApiOrderResponse api=new ApiOrderResponse("Order Update successfully",true,order1);
+            return ResponseEntity.ok(api);
+        }catch (Exception e){
+            ApiOrderResponse api=new ApiOrderResponse("failed to update order",false,null);
+            return ResponseEntity.badRequest().body(api);
+        }
+
+    }
+    @DeleteMapping("/delete/order/{id}")
+    public ResponseEntity<ApiOrderResponse> deleteOrder(@PathVariable("id") Long id) throws Exception {
+        try {
+            Order order1 = orderServices.deleteOrder(id);
+            ApiOrderResponse api = new ApiOrderResponse("delete order successfully", true, order1);
+            return ResponseEntity.ok(api);
+        } catch (Exception e) {
+            ApiOrderResponse api = new ApiOrderResponse("failed to order order", false, null);
+            return ResponseEntity.badRequest().body(api);
+        }
+    }
+    @GetMapping("/orders")
+    public List<ResponseEntity<Order>> getProductsByfarmer() throws Exception {
+        List<Order> orders=orderServices.getAllOrders();
+        return (List<ResponseEntity<Order>>) ResponseEntity.ok().body(orders);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrderById(@PathVariable Long id) throws Exception {
+        Optional<Order> orderOpt = orderServices.getOrderById(id);
+        if (orderOpt.isPresent()) {
+            return ResponseEntity.ok(orderOpt.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // 2️⃣ Get all orders for a specific user
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Long userId) throws Exception {
+        List<Order> orders = orderServices.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
+    }
+
+    // 3️⃣ Update order status
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Order> updateOrderStatus(
+            @PathVariable Long id,
+            @RequestParam String status) throws Exception {
+        Order updatedOrder = orderServices.updateOrderStatus(id, status);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    // 4️⃣ Track order
+    @GetMapping("/{id}/track")
+    public ResponseEntity<Order> trackOrder(@PathVariable Long id) throws Exception {
+        Order order = orderServices.trackOrder(id);
+        return ResponseEntity.ok(order);
+    }
+
+    @PutMapping("/admin/{id}/verify")
+    public ResponseEntity<Order> verifyOrder(@PathVariable Long id) throws Exception {
+        Order order = orderServices.verifyOrder(id);
+        return ResponseEntity.ok(order);
+    }
+
+    @GetMapping("/admin/{orderId}/total")
+    public ResponseEntity<Double> calculateOrderTotal(@PathVariable Long orderId) throws Exception {
+        Double total = orderServices.calculateOrderTotal(orderId);
+        return ResponseEntity.ok(total);
+    }
+
 
 }
