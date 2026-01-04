@@ -58,7 +58,7 @@ public class BuyerServiceImpl implements BuyerServices {
     @Override
     public Buyer updateProfile(Buyer buyer) throws Exception {
         Buyer existingBuyer = buyerRepository.findById(buyer.getId())
-                .orElseThrow(() -> new Exception("Buyer not found with ID: " + buyer.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with ID: " + buyer.getId()));
 
         try {
             // Update fields
@@ -69,14 +69,14 @@ public class BuyerServiceImpl implements BuyerServices {
 
             return buyerRepository.save(existingBuyer);
         } catch (Exception e) {
-            throw new Exception("Failed to update buyer profile: " + e.getMessage());
+            throw new ResourceNotFoundException("Failed to update buyer profile: " );
         }
     }
 
     @Override
     public Buyer getBuyerById(Long id) throws Exception {
         return buyerRepository.findById(id)
-                .orElseThrow(() -> new Exception("Buyer not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with ID: " + id));
     }
 
     @Override

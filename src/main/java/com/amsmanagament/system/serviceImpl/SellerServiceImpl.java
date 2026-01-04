@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +35,13 @@ public class SellerServiceImpl implements SellerService {
         // Create a new Seller and set fields
         Seller newSeller = new Seller();
         newSeller.setFarmername(seller.getFarmername());
+        newSeller.setShopAddress(seller.getShopAddress());
+        newSeller.setContactNumber(seller.getContactNumber());
 
         newSeller.setLatitude(seller.getLatitude());
         newSeller.setLongitude(seller.getLongitude());
+        newSeller.setCreatedAt(LocalDateTime.now());
+        newSeller.setUpdatedAt(LocalDateTime.now());
         newSeller.setUser(user);  // Link User to Seller
 
         // Save to database using repository
@@ -51,6 +56,11 @@ public class SellerServiceImpl implements SellerService {
 
         seller1.setLatitude(seller.getLatitude());
         seller1.setLongitude(seller.getLongitude());
+        seller1.setShopAddress(seller.getShopAddress());
+        seller1.setContactNumber(seller.getContactNumber());
+
+
+        seller1.setCreatedAt(LocalDateTime.now());
         // Link User to Seller
 
 

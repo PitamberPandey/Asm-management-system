@@ -152,7 +152,7 @@ public class FarmerController {
 
 
     }
-    @PostMapping("/update/seller")
+    @PutMapping("/update/seller")
     public ResponseEntity<SellerResponse> UpdateSeller(@RequestBody Seller seller) throws Exception {
         try {
             Seller seller1 = sellerService.updateSeller(seller);

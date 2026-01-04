@@ -37,6 +37,12 @@ public class BuyerController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @GetMapping("buyer/{id}")
+    public Buyer getBuyer(@PathVariable("id") Long id) throws Exception {
+        Buyer buyer=buyerServices.getBuyerById(id);
+        return buyer;
+    }
+
     // Update buyer profile
     @PutMapping("/update")
     public ResponseEntity<ApiCreateBuyer> updateProfile(@RequestBody Buyer buyer) throws Exception {
@@ -47,7 +53,7 @@ public class BuyerController {
 
     @GetMapping("/search/seller")
     public List<Seller> search(@RequestParam String keyword) throws Exception {
-        List<Seller> sellers=sellerService.searchSellersByName(keyword);
+        List<Seller> sellers=sellerService.searchSellersByName(keyword.trim());
         if(sellers==null){
             throw  new ResourceNotFoundException("Empty seller");
         }

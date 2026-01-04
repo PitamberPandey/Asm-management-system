@@ -193,6 +193,18 @@ public class AdminContoller {
         }
 
     }
+    @DeleteMapping("seller/{id}")
+    public Seller deleteseller(@PathVariable("id") Long id) throws Exception {
+        try {
+            Seller seller = sellerService.getSellerById(id);
+            return seller;
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("seller not found this id" + id);
+        }
+
+    }
+
+
 
     @PostMapping("/update/order/{id}")
     public ResponseEntity<ApiOrderResponse> Updateorder(@RequestBody Order order,@PathVariable("id") Long id) throws Exception{

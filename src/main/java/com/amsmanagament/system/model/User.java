@@ -1,5 +1,6 @@
 package com.amsmanagament.system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -144,6 +145,7 @@ public class User {
     private List<Farmer> farmer;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Seller> seller;
 
 
