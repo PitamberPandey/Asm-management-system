@@ -4,11 +4,13 @@ import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Buyer;
 import com.amsmanagament.system.model.Order;
 import com.amsmanagament.system.model.User;
+import com.amsmanagament.system.repo.ByerRepo;
 import com.amsmanagament.system.repo.OrderRepo;
 import com.amsmanagament.system.services.BuyerServices;
 import com.amsmanagament.system.services.OrderServices;
 import com.amsmanagament.system.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,26 +29,42 @@ public class OrderServiceImpl implements OrderServices {
     @Autowired
     private OrderRepo orderRepo;
 
+    @Autowired
+    ByerRepo byerRepo;
+
     // ---------------- CREATE ORDER ----------------
     @Override
-    public Order createOrder(Order order) throws Exception{
+    public Order createOrder(Order order) throws Exception {
 
-        User user = userService.findByUserId(order.getUser().getId());
-        if (user == null) throw new ResourceNotFoundException("User not found");
 
-        Buyer buyer = buyerServices.getBuyerById(order.getBuyer().getId());
-        if (buyer == null) throw new ResourceNotFoundException("Buyer not found with id " + order.getBuyer().getId());
+        String phoneNumber=SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 
+
+
+        // Find user by phone number
+        User user = userService.findUserByNumber(phoneNumber);
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+
+
+        // Set order fields
         order.setOrderDate(LocalDateTime.now());
+        order.setOrderupdatedate(LocalDateTime.now());
         order.setUser(user);
-        order.setBuyer(buyer);
-        if (order.getLatitude() != null) order.setLatitude(order.getLatitude());
-        if (order.getLongitude() != null) order.setLongitude(order.getLongitude());
 
-        if (order.getStatus() == null) order.setStatus("PENDING");
 
+
+        // Default status if not provided
+        if (order.getStatus() == null || order.getStatus().isEmpty()) {
+            order.setStatus("PENDING");
+        }
+
+        // Save order
         return orderRepo.save(order);
     }
+
 
     // ---------------- UPDATE ORDER ----------------
     @Override
@@ -56,7 +74,7 @@ public class OrderServiceImpl implements OrderServices {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
 
         existingOrder.setOrderItems(order.getOrderItems());
-        existingOrder.setTotalAmount(order.getTotalAmount());
+
         existingOrder.setStatus(order.getStatus());
         existingOrder.setOrderupdatedate(LocalDateTime.now());
         if (order.getLatitude() != null) existingOrder.setLatitude(order.getLatitude());
@@ -138,12 +156,7 @@ public class OrderServiceImpl implements OrderServices {
     }
 
     // ---------------- CALCULATE ORDER TOTAL ----------------
-    @Override
-    public Double calculateOrderTotal(Long orderId) {
-        Order order = orderRepo.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + orderId));
-        return order.getTotalAmount();
-    }
+
 
     @Override
     public Order trackOrderLocation(Long orderId) throws Exception {

@@ -27,7 +27,7 @@ public interface OrderServices {
 
     Order cancelOrder(Long id)throws  Exception;//buyer
 
-    Double calculateOrderTotal(Long orderId)throws  Exception;//admin
+
     Order trackOrderLocation(Long orderId) throws  Exception;//buyer
 
 

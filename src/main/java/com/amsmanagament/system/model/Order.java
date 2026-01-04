@@ -23,7 +23,7 @@ public class Order {
 
     private LocalDateTime orderDate;
     private LocalDateTime orderupdatedate;
-    private Double totalAmount;
+
     private String status; // PENDING, COMPLETED, CANCELLED
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)

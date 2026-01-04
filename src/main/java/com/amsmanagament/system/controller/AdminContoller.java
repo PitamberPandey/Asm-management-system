@@ -206,7 +206,7 @@ public class AdminContoller {
 
 
 
-    @PostMapping("/update/order/{id}")
+    @PutMapping ("/update/order/{id}")
     public ResponseEntity<ApiOrderResponse> Updateorder(@RequestBody Order order,@PathVariable("id") Long id) throws Exception{
         try {
             Order order1 =orderServices.updateOrder(id, order);
@@ -230,10 +230,11 @@ public class AdminContoller {
         }
     }
     @GetMapping("/orders")
-    public List<ResponseEntity<Order>> getProductsByfarmer() throws Exception {
-        List<Order> orders=orderServices.getAllOrders();
-        return (List<ResponseEntity<Order>>) ResponseEntity.ok().body(orders);
+    public ResponseEntity<List<Order>> getOrders() throws Exception {
+        List<Order> orders = orderServices.getAllOrders();
+        return ResponseEntity.ok(orders);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id) throws Exception {
@@ -246,7 +247,7 @@ public class AdminContoller {
     }
 
     // 2️⃣ Get all orders for a specific user
-    @GetMapping("/user/{userId}")
+    @GetMapping("/userorder/{userId}")
     public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Long userId) throws Exception {
         List<Order> orders = orderServices.getOrdersByUserId(userId);
         return ResponseEntity.ok(orders);
@@ -274,11 +275,7 @@ public class AdminContoller {
         return ResponseEntity.ok(order);
     }
 
-    @GetMapping("/admin/{orderId}/total")
-    public ResponseEntity<Double> calculateOrderTotal(@PathVariable Long orderId) throws Exception {
-        Double total = orderServices.calculateOrderTotal(orderId);
-        return ResponseEntity.ok(total);
-    }
+
 
 
 }

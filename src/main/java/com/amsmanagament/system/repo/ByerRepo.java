@@ -20,6 +20,7 @@ public interface ByerRepo extends JpaRepository<Buyer,Long> {
 //
     @Query("SELECT f FROM Buyer f WHERE LOWER(f.fullName) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Buyer> findByUsername(@Param("name") String name);
+    Optional<Buyer> findByUser(User user);
 
 
 }
