@@ -146,14 +146,33 @@ public class OrderServiceImpl implements OrderServices {
         return orderRepo.save(order);
     }
 
-    // ---------------- CANCEL ORDER ----------------
     @Override
-    public Order cancelOrder(Long id) {
+    public Order cancelOrder(Long id, User currentUser) {
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
-        order.setStatus("CANCELLED");
+
+        String status = order.getStatus();
+        System.out.println("Order ID: " + id);
+        System.out.println("Order status: " + order.getStatus());
+        System.out.println("Current user ID: " + currentUser.getId());
+        System.out.println("Current user role: " + currentUser.getRole());
+
+
+        if ("PENDING".equals(status)) {
+            // Any user can cancel if order is pending
+            order.setStatus("CANCELLED");
+        } else if ("Approved".equals(status) && "ROLE_ADMIN".equals(currentUser.getRole())) {
+            // Only admin can cancel approved orders
+            order.setStatus("CANCELLED");
+        } else {
+            throw new RuntimeException("You are not authorized to cancel this order");
+        }
+
         return orderRepo.save(order);
     }
+
+
+
 
     // ---------------- CALCULATE ORDER TOTAL ----------------
 

@@ -3,14 +3,14 @@ package com.amsmanagament.system.controller;
 import com.amsmanagament.system.Response.ApiCreateBuyer;
 import com.amsmanagament.system.Response.ApiOrderResponse;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
-import com.amsmanagament.system.model.Buyer;
-import com.amsmanagament.system.model.Order;
-import com.amsmanagament.system.model.Seller;
+import com.amsmanagament.system.model.*;
+import com.amsmanagament.system.repo.UserRepo;
 import com.amsmanagament.system.services.BuyerServices;
 import com.amsmanagament.system.services.OrderServices;
 import com.amsmanagament.system.services.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +28,9 @@ public class BuyerController {
 
     @Autowired
     private OrderServices orderServices;
+
+    @Autowired
+    UserRepo userRepo;
 
     // Create buyer profile
     @PostMapping("/create")
@@ -84,16 +87,47 @@ public class BuyerController {
     }
 
     @PutMapping("/cancel/order/{id}")
-    public ResponseEntity<ApiOrderResponse> cancelorder(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<ApiOrderResponse> cancelOrder(
+            @PathVariable("id") Long orderId,
+            @RequestBody CancelOrderRequest request) {
+
         try {
-            Order order1 = orderServices.cancelOrder(id);
-            ApiOrderResponse api = new ApiOrderResponse("Order cancel successfully", true, order1);
+            // Validate input
+            if (orderId == null || request.getUserId() == null || request.getRole() == null) {
+                return ResponseEntity.badRequest().body(
+                        new ApiOrderResponse("Order ID, User ID, and Role cannot be null", false, null)
+                );
+            }
+
+            // Fetch user from DB
+            User currentUser = userRepo.findById(request.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+
+            // Call service
+            Order cancelledOrder = orderServices.cancelOrder(orderId, currentUser);
+
+            // Return success response
+            ApiOrderResponse api = new ApiOrderResponse(
+                    "Order canceled successfully",
+                    true,
+                    cancelledOrder
+            );
             return ResponseEntity.ok(api);
+
         } catch (Exception e) {
-            ApiOrderResponse api = new ApiOrderResponse("failed to cancel order", false, null);
+            // Return error response
+            ApiOrderResponse api = new ApiOrderResponse(
+                    e.getMessage(),
+                    false,
+                    null
+            );
             return ResponseEntity.badRequest().body(api);
         }
     }
+
+
     @GetMapping("/{orderId}/location")
     public ResponseEntity<Order> trackOrderLocation(@PathVariable Long orderId) throws Exception {
         Order order = orderServices.trackOrderLocation(orderId);

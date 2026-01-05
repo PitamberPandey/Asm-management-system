@@ -1,6 +1,7 @@
 package com.amsmanagament.system.services;
 
 import com.amsmanagament.system.model.Order;
+import com.amsmanagament.system.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public interface OrderServices {
 
     Order verifyOrder(Long id)throws Exception;//admin
 
-    Order cancelOrder(Long id)throws  Exception;//buyer
+    Order cancelOrder(Long id, User currentuser)throws  Exception;//buyer
 
 
     Order trackOrderLocation(Long orderId) throws  Exception;//buyer
