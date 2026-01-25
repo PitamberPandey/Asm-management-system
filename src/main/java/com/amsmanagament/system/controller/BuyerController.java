@@ -151,5 +151,21 @@ public class BuyerController {
             ApiOrderItemResponse apiResponse = new ApiOrderItemResponse("Failed to add order items: " + e.getMessage(), false, null);
             return ResponseEntity.badRequest().body(apiResponse);
         }
+
+
+    }
+
+    @PutMapping("/order/items/{itemId}/quantity")
+    public ResponseEntity<ApiOrderItemResponse> updateOrderItemQuantity(
+            @PathVariable Long itemId,
+            @RequestParam int quantity) throws Exception {
+        try {
+            OrderItem updatedItem = orderItemService.updateOrderItemQuantity(itemId, quantity);
+            ApiOrderItemResponse apiResponse = new ApiOrderItemResponse("Order item quantity updated successfully", true, updatedItem);
+            return ResponseEntity.ok(apiResponse);
+        } catch (Exception e) {
+            ApiOrderItemResponse apiResponse = new ApiOrderItemResponse("Failed to update order item quantity: " + e.getMessage(), false, null);
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
     }
 }
