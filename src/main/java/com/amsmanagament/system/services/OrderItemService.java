@@ -13,6 +13,7 @@ public interface OrderItemService {
     OrderItem removeOrderItem(Long orderItemId);
 
     OrderItem getOrderItemById(Long orderItemId);
+    List<OrderItem> getAllOrderItems();
 
     List<OrderItem> getOrderItemsByOrderId(Long orderId);
 }

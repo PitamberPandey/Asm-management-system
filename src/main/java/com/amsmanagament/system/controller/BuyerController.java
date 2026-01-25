@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -187,4 +188,11 @@ public class BuyerController {
         List<OrderItem> items = orderItemService.getOrderItemsByOrderId(orderId);
         return ResponseEntity.ok(items);
     }
+
+    @GetMapping("/orderitems/{orderitemId}")
+    public ResponseEntity<OrderItem> getAllOrderItems(@PathVariable Long orderitemId) {
+        OrderItem items = orderItemService.getOrderItemById(orderitemId);
+        return ResponseEntity.ok(items);
+    }
+
 }

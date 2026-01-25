@@ -67,6 +67,11 @@ private OrderRepo orderRepo;
     }
 
     @Override
+    public List<OrderItem> getAllOrderItems() {
+        return orderItemRepo.findAll();
+    }
+
+    @Override
     public List<OrderItem> getOrderItemsByOrderId(Long orderId) {
         Order order = orderRepo.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         return orderItemRepo.findByOrder(order);
