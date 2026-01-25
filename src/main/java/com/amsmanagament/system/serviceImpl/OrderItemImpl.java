@@ -53,10 +53,11 @@ private OrderRepo orderRepo;
     }
 
     @Override
-    public void removeOrderItem(Long orderItemId) {
+    public OrderItem removeOrderItem(Long orderItemId) {
         OrderItem orderItem= orderItemRepo.findById(orderItemId).orElseThrow(()->new ResourceNotFoundException("Order item not found"));
         orderItemRepo.delete(orderItem);
 
+        return orderItem;
     }
 
     @Override

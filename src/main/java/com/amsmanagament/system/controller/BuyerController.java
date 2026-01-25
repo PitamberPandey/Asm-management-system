@@ -168,4 +168,16 @@ public class BuyerController {
             return ResponseEntity.badRequest().body(apiResponse);
         }
     }
+
+    @DeleteMapping("/order/items/item/{itemId}")
+    public ResponseEntity<ApiOrderItemResponse> removeOrderItem(@PathVariable Long itemId) throws Exception {
+        try {
+            OrderItem removedItem = orderItemService.removeOrderItem(itemId);
+            ApiOrderItemResponse apiResponse = new ApiOrderItemResponse("Order item removed successfully", true, removedItem);
+            return ResponseEntity.ok(apiResponse);
+        } catch (Exception e) {
+            ApiOrderItemResponse apiResponse = new ApiOrderItemResponse("Failed to remove order item: " + e.getMessage(), false, null);
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+    }
 }

@@ -10,7 +10,7 @@ public interface OrderItemService {
 
     OrderItem updateOrderItemQuantity(Long orderItemId, int quantity);
 
-    void removeOrderItem(Long orderItemId);
+    OrderItem removeOrderItem(Long orderItemId);
 
     OrderItem getOrderItemById(Long orderItemId);
 
