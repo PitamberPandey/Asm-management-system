@@ -179,5 +179,12 @@ public class BuyerController {
             ApiOrderItemResponse apiResponse = new ApiOrderItemResponse("Failed to remove order item: " + e.getMessage(), false, null);
             return ResponseEntity.badRequest().body(apiResponse);
         }
+
+    }
+
+    @GetMapping("/order/{orderId}/items")
+    public ResponseEntity<List<OrderItem>> getOrderItems(@PathVariable Long orderId) throws Exception {
+        List<OrderItem> items = orderItemService.getOrderItemsByOrderId(orderId);
+        return ResponseEntity.ok(items);
     }
 }
