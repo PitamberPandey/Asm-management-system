@@ -1,0 +1,18 @@
+package com.amsmanagament.system.services;
+
+import com.amsmanagament.system.model.OrderItem;
+
+import java.util.List;
+
+public interface OrderItemService {
+
+    OrderItem addItemToOrder(Long orderId, Long productId, int quantity);
+
+    OrderItem updateOrderItemQuantity(Long orderItemId, int quantity);
+
+    void removeOrderItem(Long orderItemId);
+
+    OrderItem getOrderItemById(Long orderItemId);
+
+    List<OrderItem> getOrderItemsByOrderId(Long orderId);
+}

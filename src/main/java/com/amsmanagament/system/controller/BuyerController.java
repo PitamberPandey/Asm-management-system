@@ -1,11 +1,14 @@
 package com.amsmanagament.system.controller;
 
+import com.amsmanagament.system.Response.AddOrderItemRequest;
 import com.amsmanagament.system.Response.ApiCreateBuyer;
+import com.amsmanagament.system.Response.ApiOrderItemResponse;
 import com.amsmanagament.system.Response.ApiOrderResponse;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.repo.UserRepo;
 import com.amsmanagament.system.services.BuyerServices;
+import com.amsmanagament.system.services.OrderItemService;
 import com.amsmanagament.system.services.OrderServices;
 import com.amsmanagament.system.services.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,9 @@ public class BuyerController {
 
     @Autowired
     UserRepo userRepo;
+
+    @Autowired
+    private OrderItemService orderItemService;
 
     // Create buyer profile
     @PostMapping("/create")
@@ -132,5 +138,18 @@ public class BuyerController {
     public ResponseEntity<Order> trackOrderLocation(@PathVariable Long orderId) throws Exception {
         Order order = orderServices.trackOrderLocation(orderId);
         return ResponseEntity.ok(order);
+    }
+
+    @PostMapping("/order/items")
+    public ResponseEntity<ApiOrderItemResponse> addOrderItems(@RequestBody AddOrderItemRequest request) throws Exception {
+        try {
+            OrderItem savedItems = orderItemService.addItemToOrder(request.getOrderId(),request.getProductId(), request.getQuantity()
+            );
+            ApiOrderItemResponse apiResponse = new ApiOrderItemResponse("Order items added successfully", true, savedItems);
+            return ResponseEntity.ok(apiResponse);
+        } catch (Exception e) {
+            ApiOrderItemResponse apiResponse = new ApiOrderItemResponse("Failed to add order items: " + e.getMessage(), false, null);
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
     }
 }
