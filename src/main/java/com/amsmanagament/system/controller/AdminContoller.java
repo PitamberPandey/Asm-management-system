@@ -41,6 +41,9 @@ public class AdminContoller {
     @Autowired
     OrderServices orderServices;
 
+    @Autowired
+    OrderItemService orderItemService;
+
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) throws Exception {
         User user = userService.findByUserId(id);
@@ -273,6 +276,12 @@ public class AdminContoller {
     public ResponseEntity<Order> verifyOrder(@PathVariable Long id) throws Exception {
         Order order = orderServices.verifyOrder(id);
         return ResponseEntity.ok(order);
+    }
+
+  @GetMapping("/orderitems")
+    public ResponseEntity<List<OrderItem>> getAllOrderItems() throws Exception {
+        List<OrderItem> orderItems = orderItemService.getAllOrderItems();
+        return ResponseEntity.ok(orderItems);
     }
 
 
