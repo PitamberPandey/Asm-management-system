@@ -194,6 +194,18 @@ public class FarmerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @DeleteMapping("/delete/delivery/{id}")
+    public ResponseEntity<ApiDeliveryResponse> deleteDelivery(@PathVariable ("id") Long id) {
+        try {
+            deliveryService.deleteDelivery(id);
+            ApiDeliveryResponse response = new ApiDeliveryResponse("Delivery deleted successfully", true, null);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiDeliveryResponse response = new ApiDeliveryResponse("Failed to delete delivery: " + e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }
 
 
