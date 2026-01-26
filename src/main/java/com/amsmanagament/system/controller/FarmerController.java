@@ -4,12 +4,15 @@ package com.amsmanagament.system.controller;
 import com.amsmanagament.system.Response.ApiCreateResponse;
 
 
+import com.amsmanagament.system.Response.ApiDeliveryResponse;
 import com.amsmanagament.system.Response.ProductResponse;
 import com.amsmanagament.system.Response.SellerResponse;
+import com.amsmanagament.system.model.Delivery;
 import com.amsmanagament.system.model.Farmer;
 
 import com.amsmanagament.system.model.Product;
 import com.amsmanagament.system.model.Seller;
+import com.amsmanagament.system.services.DeliveryService;
 import com.amsmanagament.system.services.Farmerservice;
 import com.amsmanagament.system.services.ProductService;
 import com.amsmanagament.system.services.SellerService;
@@ -33,6 +36,9 @@ public class FarmerController {
 
     @Autowired
     SellerService sellerService;
+
+    @Autowired
+    DeliveryService deliveryService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<Farmer> getUserById(@PathVariable Long id) throws Exception {
@@ -163,7 +169,18 @@ public class FarmerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sellerResponse);
         }
     }
+    @PostMapping("/create/delivery")
+    public ResponseEntity<ApiDeliveryResponse> createDelivery(@RequestBody Delivery delivery) throws  Exception {
+        try {
+            Delivery delivery1 = deliveryService.createDelivery(delivery, delivery.getOrder().getId());
+            ApiDeliveryResponse response = new ApiDeliveryResponse("Delivery created successfully", true, delivery1);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiDeliveryResponse response = new ApiDeliveryResponse("Failed to create delivery: " + e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
 
+    }
 
 }
 
