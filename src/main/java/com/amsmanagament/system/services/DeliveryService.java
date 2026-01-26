@@ -17,4 +17,5 @@ public interface DeliveryService {
     Delivery verifyDelivery(Long id);
 
     void deleteDelivery(Long id);
+
 }

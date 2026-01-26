@@ -206,6 +206,30 @@ public class FarmerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @PutMapping("/delivery/{id}")
+    public ResponseEntity<ApiDeliveryResponse> verifyDelivery(@PathVariable("id") Long deliveryId) {
+        try {
+            Delivery verifiedDelivery = deliveryService.verifyDelivery(deliveryId);
+            ApiDeliveryResponse response = new ApiDeliveryResponse("Delivery verified successfully", true, verifiedDelivery);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiDeliveryResponse response = new ApiDeliveryResponse("Failed to verify delivery: " + e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @GetMapping("/get/delivery/{id}")
+    public ResponseEntity<Delivery> getDeliveryById(@PathVariable("id") Long id) throws Exception {
+        Delivery delivery = deliveryService.getDeliveryById(id);
+        return ResponseEntity.ok(delivery);
+    }
+
+    @GetMapping("/getdelivery/order/{orderId}")
+    public ResponseEntity<Delivery> getDeliveryByOrderId(@PathVariable("orderId") Long orderId) throws Exception {
+        Delivery delivery = deliveryService.findByOrder(orderId);
+        return ResponseEntity.ok(delivery);
+    }
 }
 
 
