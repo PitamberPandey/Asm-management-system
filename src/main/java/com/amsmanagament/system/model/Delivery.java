@@ -20,7 +20,11 @@ public class Delivery {
     private Order order;
 
     private String deliveryAddress;
-    private String deliveryStatus; // PENDING, DISPATCHED, DELIVERED
+    private String contactNumber;
+    private String recipientName;
+    private String longitude;
+    private String latitude;
+    private String deliveryStatus="PENDING"; // PENDING, DISPATCHED, DELIVERED
     private LocalDateTime createdAt;
     private LocalDateTime deliveryTime;
 
