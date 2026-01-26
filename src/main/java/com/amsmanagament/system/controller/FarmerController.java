@@ -180,8 +180,20 @@ public class FarmerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
+
     }
 
+    @PutMapping("/update/delivery/{deliveryid}")
+    public ResponseEntity<ApiDeliveryResponse> updateDelivery(@RequestBody Delivery delivery,@PathVariable("deliveryid") Long deliveryid) throws  Exception {
+        try {
+            Delivery delivery1 = deliveryService.updateDelivery(deliveryid, delivery);
+            ApiDeliveryResponse response = new ApiDeliveryResponse("Delivery updated successfully", true, delivery1);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiDeliveryResponse response = new ApiDeliveryResponse("Failed to update delivery: " + e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }
 
 
