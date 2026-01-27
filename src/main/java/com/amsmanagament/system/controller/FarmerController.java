@@ -297,8 +297,15 @@ public class FarmerController {
             return ResponseEntity.ok(apiResponseInventory);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            ApiResponseInventory apiResponseInventory = new ApiResponseInventory("Product is out of stock: " + e.getMessage(), false, null);
+            return ResponseEntity.ok(apiResponseInventory);
         }
+    }
+
+    @GetMapping("Inventory/Product/{productId}")
+    public ResponseEntity<Inventory> getInventoryByProductId(@PathVariable("productId") Long productId) throws Exception {
+        Inventory inventory = inventoryService.getInventoryByProductId(productId);
+        return ResponseEntity.ok(inventory);
     }
 
 }
