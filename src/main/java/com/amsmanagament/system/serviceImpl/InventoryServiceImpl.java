@@ -9,6 +9,7 @@ import com.amsmanagament.system.repo.SellerRepo;
 import com.amsmanagament.system.services.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -16,92 +17,120 @@ import java.time.LocalDateTime;
 public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
-    InventoryRepo inventoryRepo;
+    private InventoryRepo inventoryRepo;
 
     @Autowired
-    ProductRepo  productRepo;
+    private ProductRepo productRepo;
 
     @Autowired
-    SellerRepo sellerRepo;
+    private SellerRepo sellerRepo;
 
+    // ---------------- CHECK STOCK ----------------
 
     @Override
     public boolean isProductInStock(Long productId, int requiredQuantity) {
-        Product product= productRepo.findById(productId).orElseThrow(()->new RuntimeException("Product not found"));
-
-        Inventory inventory= inventoryRepo.findByProduct(product.getId());
-        if(inventory!=null && inventory.getQuantity()>=requiredQuantity){
-
-            return true;
-        }
-
-        return false;
+        Inventory inventory = inventoryRepo.findByProduct_Id(productId);
+        return inventory != null && inventory.getQuantity() >= requiredQuantity;
     }
+
+    // ---------------- GET INVENTORY ----------------
 
     @Override
     public Inventory getInventoryById(Long inventoryId) {
-        Inventory inventory= inventoryRepo.findById(inventoryId).orElseThrow(()->new RuntimeException("Inventory not found"));
-
-        return inventory;
+        return inventoryRepo.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
     }
 
     @Override
     public Inventory getInventoryByProductId(Long productId) {
-        Product product= productRepo.findById(productId).orElseThrow(()->new RuntimeException("Product not found"));
-        Inventory inventory= inventoryRepo.findByProduct(product.getId());
+        Inventory inventory = inventoryRepo.findByProduct_Id(productId);
+
+        if (inventory == null) {
+            throw new RuntimeException("Inventory not found for product");
+        }
 
         return inventory;
     }
 
+    // ---------------- CREATE INVENTORY ----------------
+
     @Override
     public Inventory createInventory(Inventory inventory, Long productId, Long sellerId) {
-        Product product= productRepo.findById(productId).orElseThrow(()->new RuntimeException("Product not found"));
-        Seller seller= sellerRepo.findById(sellerId).orElseThrow(()->new RuntimeException("Seller not found"));
-        Inventory inventory1=new Inventory();
-        inventory1.setProduct(product);
-        inventory1.setPrice(inventory.getPrice());
-        inventory1.setCreatedAt(LocalDateTime.now());
-        inventory1.setUpdatedAt(LocalDateTime.now());
-        inventory1.setSeller(seller);
-        inventory1.setQuantity(inventory.getQuantity());
 
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        return  inventoryRepo.save(inventory1);
+        Seller seller = sellerRepo.findById(sellerId)
+                .orElseThrow(() -> new RuntimeException("Seller not found"));
+
+        Inventory newInventory = new Inventory();
+        newInventory.setProduct(product);
+        newInventory.setSeller(seller);
+        newInventory.setQuantity(inventory.getQuantity());
+        newInventory.setPrice(inventory.getPrice());
+        newInventory.setCreatedAt(LocalDateTime.now());
+        newInventory.setUpdatedAt(LocalDateTime.now());
+
+        return inventoryRepo.save(newInventory);
     }
+
+    // ---------------- UPDATE INVENTORY ----------------
 
     @Override
     public Inventory updateInventory(Long inventoryId, Inventory inventory) {
-        Inventory inventory1= inventoryRepo.findById(inventoryId).orElseThrow(()->new RuntimeException("Inventory not found"));
-        inventory1.setQuantity(inventory.getQuantity());
-        inventory1.setPrice(inventory.getPrice());
-        inventory1.setUpdatedAt(LocalDateTime.now());
-        return inventoryRepo.save(inventory1);
 
+        Inventory existingInventory = inventoryRepo.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        existingInventory.setQuantity(inventory.getQuantity());
+        existingInventory.setPrice(inventory.getPrice());
+        existingInventory.setUpdatedAt(LocalDateTime.now());
+
+        return inventoryRepo.save(existingInventory);
     }
 
+    // ---------------- STOCK MANAGEMENT ----------------
+
+    @Transactional
     @Override
     public void increaseStock(Long productId, int quantity) {
-        Product product= productRepo.findById(productId).orElseThrow(()->new RuntimeException("Product not found"));
-        Inventory inventory= inventoryRepo.findByProduct(product.getId());
-        inventory.setQuantity(inventory.getQuantity()+quantity);
-        inventoryRepo.save(inventory);
 
+        Inventory inventory = inventoryRepo.findByProduct_Id(productId);
+
+        if (inventory == null) {
+            throw new RuntimeException("Inventory not found for product");
+        }
+
+        inventory.setQuantity(inventory.getQuantity() + quantity);
+        inventory.setUpdatedAt(LocalDateTime.now());
     }
 
+    @Transactional
     @Override
     public void reduceStock(Long productId, int quantity) {
-        Product product= productRepo.findById(productId).orElseThrow(()->new RuntimeException("Product not found"));
-        Inventory inventory= inventoryRepo.findByProduct(product.getId());
-        inventory.setQuantity(inventory.getQuantity()-quantity);
-        inventoryRepo.save(inventory);
 
+        Inventory inventory = inventoryRepo.findByProduct_Id(productId);
+
+        if (inventory == null) {
+            throw new RuntimeException("Inventory not found for product");
+        }
+
+        if (inventory.getQuantity() < quantity) {
+            throw new RuntimeException("Insufficient stock");
+        }
+
+        inventory.setQuantity(inventory.getQuantity() - quantity);
+        inventory.setUpdatedAt(LocalDateTime.now());
     }
+
+    // ---------------- DELETE INVENTORY ----------------
 
     @Override
     public void deleteInventory(Long inventoryId) {
-        Product product= productRepo.findById(inventoryId).orElseThrow(()->new RuntimeException("Product not found"));
-        Inventory inventory= inventoryRepo.findByProduct(product.getId());
-        inventoryRepo.delete(inventory);
 
+        Inventory inventory = inventoryRepo.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        inventoryRepo.delete(inventory);
     }
 }

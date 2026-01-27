@@ -1,21 +1,12 @@
 package com.amsmanagament.system.controller;
 
 
-import com.amsmanagament.system.Response.ApiCreateResponse;
+import com.amsmanagament.system.Response.*;
 
 
-import com.amsmanagament.system.Response.ApiDeliveryResponse;
-import com.amsmanagament.system.Response.ProductResponse;
-import com.amsmanagament.system.Response.SellerResponse;
-import com.amsmanagament.system.model.Delivery;
-import com.amsmanagament.system.model.Farmer;
+import com.amsmanagament.system.model.*;
 
-import com.amsmanagament.system.model.Product;
-import com.amsmanagament.system.model.Seller;
-import com.amsmanagament.system.services.DeliveryService;
-import com.amsmanagament.system.services.Farmerservice;
-import com.amsmanagament.system.services.ProductService;
-import com.amsmanagament.system.services.SellerService;
+import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +30,9 @@ public class FarmerController {
 
     @Autowired
     DeliveryService deliveryService;
+
+    @Autowired
+    InventoryService inventoryService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<Farmer> getUserById(@PathVariable Long id) throws Exception {
@@ -229,6 +223,18 @@ public class FarmerController {
     public ResponseEntity<Delivery> getDeliveryByOrderId(@PathVariable("orderId") Long orderId) throws Exception {
         Delivery delivery = deliveryService.findByOrder(orderId);
         return ResponseEntity.ok(delivery);
+    }
+
+    @PostMapping("/Inventory/seller/{sellerId}/product/{productId}")
+    public ResponseEntity<ApiResponseInventory> createInventory(@PathVariable Long sellerId, @PathVariable Long productId, @RequestParam int quantity,@RequestBody Inventory inventory) {
+        try {
+            Inventory inventorys=inventoryService.createInventory(inventory,productId,sellerId);// Adjust as needed
+            ApiResponseInventory response = new ApiResponseInventory("Inventory created successfully", true, inventorys);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponseInventory response = new ApiResponseInventory("Failed to create inventory: " + e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 }
 
