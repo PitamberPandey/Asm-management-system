@@ -1,5 +1,6 @@
 package com.amsmanagament.system.serviceImpl;
 
+import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Inventory;
 import com.amsmanagament.system.model.Product;
 import com.amsmanagament.system.model.Seller;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -29,8 +32,11 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public boolean isProductInStock(Long productId, int requiredQuantity) {
-        Inventory inventory = inventoryRepo.findByProduct_Id(productId);
-        return inventory != null && inventory.getQuantity() >= requiredQuantity;
+        Optional<Inventory> inventory = inventoryRepo.findById(productId);
+        if(inventory.get().getQuantity()>requiredQuantity){
+            return true;
+        }
+        return false;
     }
 
     // ---------------- GET INVENTORY ----------------
@@ -38,7 +44,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Inventory getInventoryById(Long inventoryId) {
         return inventoryRepo.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
     }
 
     @Override
@@ -46,10 +52,15 @@ public class InventoryServiceImpl implements InventoryService {
         Inventory inventory = inventoryRepo.findByProduct_Id(productId);
 
         if (inventory == null) {
-            throw new RuntimeException("Inventory not found for product");
+            throw new ResourceNotFoundException("Inventory not found for product");
         }
 
         return inventory;
+    }
+
+    @Override
+    public List<Inventory> getAllInventor() {
+        return inventoryRepo.findAll();
     }
 
     // ---------------- CREATE INVENTORY ----------------
@@ -58,10 +69,10 @@ public class InventoryServiceImpl implements InventoryService {
     public Inventory createInventory(Inventory inventory, Long productId, Long sellerId) {
 
         Product product = productRepo.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         Seller seller = sellerRepo.findById(sellerId)
-                .orElseThrow(() -> new RuntimeException("Seller not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
 
         Inventory newInventory = new Inventory();
         newInventory.setProduct(product);
@@ -93,34 +104,33 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Transactional
     @Override
-    public void increaseStock(Long productId, int quantity) {
+    public void increaseStock(Long InventoryId, int quantity) {
 
-        Inventory inventory = inventoryRepo.findByProduct_Id(productId);
+        Optional<Inventory> inventory = inventoryRepo.findById(InventoryId);
 
-        if (inventory == null) {
-            throw new RuntimeException("Inventory not found for product");
+        if (inventory.isEmpty()) {
+            throw new ResourceNotFoundException("Inventory not found");
         }
 
-        inventory.setQuantity(inventory.getQuantity() + quantity);
-        inventory.setUpdatedAt(LocalDateTime.now());
+        inventory.get().setQuantity(inventory.get().getQuantity() + quantity);
+        inventory.get().setUpdatedAt(LocalDateTime.now());
     }
 
     @Transactional
     @Override
     public void reduceStock(Long productId, int quantity) {
 
-        Inventory inventory = inventoryRepo.findByProduct_Id(productId);
+       Optional<Inventory> inventory = inventoryRepo.findById(productId);
 
         if (inventory == null) {
-            throw new RuntimeException("Inventory not found for product");
+            throw new ResourceNotFoundException("Inventory not found for product");
         }
 
-        if (inventory.getQuantity() < quantity) {
+        if (inventory.get().getQuantity()< quantity) {
             throw new RuntimeException("Insufficient stock");
         }
 
-        inventory.setQuantity(inventory.getQuantity() - quantity);
-        inventory.setUpdatedAt(LocalDateTime.now());
+        inventory.get().setQuantity(inventory.get().getQuantity() - quantity);
     }
 
     // ---------------- DELETE INVENTORY ----------------
@@ -129,7 +139,7 @@ public class InventoryServiceImpl implements InventoryService {
     public void deleteInventory(Long inventoryId) {
 
         Inventory inventory = inventoryRepo.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
         inventoryRepo.delete(inventory);
     }

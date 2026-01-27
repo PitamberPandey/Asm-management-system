@@ -1,6 +1,9 @@
 package com.amsmanagament.system.services;
 
 import com.amsmanagament.system.model.Inventory;
+import jakarta.persistence.criteria.CriteriaBuilder;
+
+import java.util.List;
 
 public interface InventoryService {
 
@@ -13,6 +16,8 @@ public interface InventoryService {
     // Get inventory by product ID
     Inventory getInventoryByProductId(Long productId);
 
+    List<Inventory> getAllInventor();
+
     // Create inventory for a product
     Inventory createInventory(Inventory inventory, Long productId, Long sellerId);
 
@@ -20,7 +25,7 @@ public interface InventoryService {
     Inventory updateInventory(Long inventoryId, Inventory inventory);
 
     // Increase stock
-    void increaseStock(Long productId, int quantity);
+    void increaseStock(Long InventoryId, int quantity);
 
     // Reduce stock
     void reduceStock(Long productId, int quantity);

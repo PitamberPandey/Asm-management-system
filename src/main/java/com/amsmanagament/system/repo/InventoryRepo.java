@@ -4,10 +4,15 @@ import com.amsmanagament.system.model.Inventory;
 import com.amsmanagament.system.model.Seller;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface InventoryRepo extends JpaRepository<Inventory, Long> {
 
+    Optional<Inventory> findById(Long id);
+
     // ✅ Correct: query by product ID
-    Inventory findByProduct_Id(Long productId);
+   Inventory findByProduct_Id(Long productId);
 
     // Optional: inventory by seller
     Inventory findBySeller(Seller seller);
