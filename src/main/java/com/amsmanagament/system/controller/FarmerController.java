@@ -236,6 +236,18 @@ public class FarmerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @PutMapping("/update/inventory/{id}")
+    public ResponseEntity<ApiResponseInventory> updateInventory(@PathVariable("id") Long inventoryId, @RequestBody Inventory inventory) {
+        try {
+            Inventory updatedInventory = inventoryService.updateInventory(inventoryId, inventory);
+            ApiResponseInventory response = new ApiResponseInventory("Inventory updated successfully", true, updatedInventory);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponseInventory response = new ApiResponseInventory("Failed to update inventory: " + e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }
 
 
