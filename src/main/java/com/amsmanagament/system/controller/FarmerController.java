@@ -289,6 +289,17 @@ public class FarmerController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
+@GetMapping("/CheckStock/{id}")
+    public ResponseEntity<ApiResponseInventory> checkStock(@PathVariable("productId") Long productId,@RequestParam int quantity) {
+        try {
+            inventoryService.isProductInStock(productId, quantity);
+            ApiResponseInventory apiResponseInventory = new ApiResponseInventory("Product is in stock", true, null);
+            return ResponseEntity.ok(apiResponseInventory);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
 
 }
 
