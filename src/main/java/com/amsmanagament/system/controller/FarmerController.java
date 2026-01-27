@@ -260,6 +260,14 @@ public class FarmerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @GetMapping("/get/inventory/{id}")
+    public ResponseEntity<Inventory> getInventoryById(@PathVariable("id") Long id ) throws Exception {
+        Inventory inventory = inventoryService.getInventoryById(id);
+        return ResponseEntity.ok(inventory);
+    }
+
+
 }
 
 
