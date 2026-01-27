@@ -248,6 +248,18 @@ public class FarmerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @DeleteMapping("/delete/inventory/{id}")
+    public ResponseEntity<ApiResponseInventory> deleteInventory(@PathVariable("id") Long inventoryId) {
+        try {
+            inventoryService.deleteInventory(inventoryId);
+            ApiResponseInventory response = new ApiResponseInventory("Inventory deleted successfully", true, null);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponseInventory response = new ApiResponseInventory("Failed to delete inventory: " + e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }
 
 
