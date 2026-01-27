@@ -266,7 +266,29 @@ public class FarmerController {
         Inventory inventory = inventoryService.getInventoryById(id);
         return ResponseEntity.ok(inventory);
     }
+@PutMapping("/increaestock/{id}")
+    public ResponseEntity<ApiResponseInventory> increaseStock(@PathVariable("productId") Long productId,@RequestParam int quantity) {
+    try {
+        inventoryService.increaseStock(productId, quantity);
+        ApiResponseInventory response = new ApiResponseInventory("Inventory stock increased successfully", true, null);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        ApiResponseInventory response = new ApiResponseInventory("Failed to increase inventory stock: " + e.getMessage(), false, null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+}
 
+@PostMapping("/decreasestock/{id}")
+    public ResponseEntity<ApiResponseInventory> decreaseStock(@PathVariable("productId") Long productId,@RequestParam int quantity) {
+    try {
+        inventoryService.reduceStock(productId, quantity);
+        ApiResponseInventory response = new ApiResponseInventory("Inventory stock decreased successfully", true, null);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        ApiResponseInventory response = new ApiResponseInventory("Failed to decrease inventory stock: " + e.getMessage(), false, null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+}
 
 }
 
