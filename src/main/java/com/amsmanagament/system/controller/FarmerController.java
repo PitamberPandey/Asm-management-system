@@ -261,69 +261,6 @@ public class FarmerController {
         }
     }
 
-    @GetMapping("/inventries")
-    public ResponseEntity<List<Inventory>> allInventories() {
-        List<Inventory> inventories = inventoryService.getAllInventor();
-        return ResponseEntity.ok(inventories);
-    }
-
-
-    @GetMapping("/get/inventory/{id}")
-    public ResponseEntity<Inventory> getInventoryById(@PathVariable("id") Long id ) throws Exception {
-        Inventory inventory = inventoryService.getInventoryById(id);
-        return ResponseEntity.ok(inventory);
-    }
-    @PutMapping("/increasestock/{productId}")
-    public ResponseEntity<ApiResponseInventory> increaseStock(
-            @PathVariable Long productId,
-            @RequestParam int quantity) {
-
-        try {
-            inventoryService.increaseStock(productId, quantity);
-            ApiResponseInventory response =
-                    new ApiResponseInventory("Inventory stock increased successfully", true, null);
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            ApiResponseInventory response =
-                    new ApiResponseInventory("Failed to increase inventory stock: " + e.getMessage(), false, null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    }
-
-
-@PutMapping("/decreasestock/{productId}")
-    public ResponseEntity<ApiResponseInventory> decreaseStock(@PathVariable("productId") Long productId,@RequestParam int quantity) {
-    try {
-        inventoryService.reduceStock(productId, quantity);
-        ApiResponseInventory response = new ApiResponseInventory("Inventory stock decreased successfully", true, null);
-        return ResponseEntity.ok(response);
-    } catch (Exception e) {
-        ApiResponseInventory response = new ApiResponseInventory("Failed to decrease inventory stock: " + e.getMessage(), false, null);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
-}
-@GetMapping("/CheckStock/{productId}")
-    public ResponseEntity<ApiResponseInventory> checkStock(@PathVariable("productId") Long productId,@RequestParam int quantity) {
-        try {
-             boolean available=inventoryService.isProductInStock(productId, quantity);
-
-            return ResponseEntity.ok(
-                    new ApiResponseInventory(
-                            available ? "Stock available" : "Insufficient stock",
-                            available,
-                            null
-                    )
-            );
-
-        } catch (Exception e) {
-            ApiResponseInventory apiResponseInventory = new ApiResponseInventory("Product is out of stock: " + e.getMessage(), false, null);
-            return ResponseEntity.ok(apiResponseInventory);
-        }
-    }
-
-
-
 }
 
 
