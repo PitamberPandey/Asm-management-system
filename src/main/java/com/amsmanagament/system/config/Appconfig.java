@@ -39,6 +39,7 @@ public class Appconfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/farmer/**").hasAnyRole("ADMIN","FARM")
                         .requestMatchers("/api/buyer/**").hasAnyRole("ADMIN","BUYER")
+                        .requestMatchers("/api/farmerbuyer/**").hasAnyRole("FARM","BUYER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtValidator, UsernamePasswordAuthenticationFilter.class)

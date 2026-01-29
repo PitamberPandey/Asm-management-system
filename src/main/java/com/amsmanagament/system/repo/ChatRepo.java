@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ChatRepo extends JpaRepository<Chat,Long> {
 
     Optional<Chat> findById(Long chatId);
-    List<Chat> findByMessage(Message message);
+
 
 
     Optional<Chat> findByBuyerAndSeller(Buyer buyer, Seller seller);

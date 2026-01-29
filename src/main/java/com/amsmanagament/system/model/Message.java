@@ -3,10 +3,10 @@ package com.amsmanagament.system.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "messages")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,18 +17,26 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Each message belongs to a chat
+    // The chat this message belongs to
     @ManyToOne(optional = false)
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
-    // Who sent this message (Buyer or Seller)
+    // Who sent this message
     @ManyToOne(optional = false)
     @JoinColumn(name = "sender_id")
-    private User sender; // You can make User a parent class for Buyer & Seller, or handle dynamically
+    private User sender;
 
-    private String message;
+    // Message content
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
 
+    // Optional: Read/unread status
+    @Column(name = "is_read")
+    private boolean read;
+
+    // Timestamp when the message was created
     @CreationTimestamp
     private LocalDateTime createdAt;
+
 }
