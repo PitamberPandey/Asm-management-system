@@ -23,9 +23,9 @@ public class BuyerAndSellerControllers {
     private MessageServices messageServices;
 
 
-    @PostMapping("/create/chat")
-    public ResponseEntity<ApiChatReponse> createChat(@RequestParam Long buyerId,
-                                                     @RequestParam Long sellerId) {
+    @PostMapping("/create/{buyerId}/chat/{sellerId}")
+    public ResponseEntity<ApiChatReponse> createChat(@PathVariable Long buyerId,
+                                                     @PathVariable Long sellerId) {
         try {
             // Create or get chat
             Chat chat = chatServices.createChat(buyerId, sellerId);
