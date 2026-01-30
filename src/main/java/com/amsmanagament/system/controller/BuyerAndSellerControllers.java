@@ -50,6 +50,45 @@ public class BuyerAndSellerControllers {
         }
     }
 
+    @PostMapping("/create/{chatId}")
+    public ResponseEntity<ApiChatReponse> deleteChat(@PathVariable Long chatId) {
+        try {
+            // Create or get chat
+             chatServices.deleteChat(chatId);
+
+            // Build API response
+            ApiChatReponse apiChatReponse = new ApiChatReponse(
+                    "DeleteChat created successfully",
+                    true,
+                    null
+            );
+
+            return ResponseEntity.ok(apiChatReponse);
+
+        } catch (Exception e) {
+            // Handle errors
+            ApiChatReponse apiChatReponse = new ApiChatReponse(
+                    "Failed to delete chat: " + e.getMessage(),
+                    false,
+                    null
+            );
+            return ResponseEntity.status(500).body(apiChatReponse);
+        }
+    }
+
+    @GetMapping("/chats")
+    public  List<Chat> findALLChat(){
+        List<Chat> chats=chatServices.getAllChats();
+        return chats;
+    }
+
+
+
+
+
+
+
+
     /**
      * 2️⃣ Send a message in a chat
      */
