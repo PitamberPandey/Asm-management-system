@@ -51,6 +51,15 @@ public class MessageServiceImpl implements MessageServices {
     }
 
     @Override
+    public Message updatemessage(Message message,Long messageId) {
+        Message messages=messageRepo.findById(messageId).orElseThrow(()->new ResourceNotFoundException("Message not found this id"));
+        messages.setContent(message.getContent());
+        messages.setCreatedAt(LocalDateTime.now());
+
+        return messageRepo.save(messages);
+    }
+
+    @Override
     public List<Message> getMessagesByChat(Long chatId) {
         Chat chat = chatRepo.findById(chatId)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found"));

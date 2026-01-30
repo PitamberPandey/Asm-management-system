@@ -95,38 +95,35 @@ public Optional<Chat> findChatsBetween(@PathVariable("buyerid")Long buyerId, @Pa
 }
 
 
-
-
-
-
-    /**
-     * 2️⃣ Send a message in a chat
-     */
     @PostMapping("/{chatId}/message")
     public Message sendMessage(@PathVariable Long chatId,
-                               @RequestParam String content) {
-        return null;
+                               @RequestBody Message message) {
+        Message messages=messageServices.sendMessage(message,chatId);
+
+
+
+        return messages;
     }
 
-    /**
-     * 3️⃣ Get all messages of a chat
-     */
+
     @GetMapping("/{chatId}/messages")
     public List<Message> getMessages(@PathVariable Long chatId) {
         return messageServices.getMessagesByChat(chatId);
     }
 
-    /**
-     * 4️⃣ Optional: Mark a message as read
-     */
+    @PutMapping("message/update/{messageId}")
+    public Message updateMessage(@RequestBody Message message,@PathVariable("messageId")Long messageId){
+        Message message1=messageServices.updatemessage(message,messageId);
+        return ResponseEntity.ok(message1).getBody();
+    }
+
+
     @PostMapping("/message/{messageId}/read")
     public Message markAsRead(@PathVariable Long messageId) {
         return messageServices.markAsRead(messageId);
     }
 
-    /**
-     * 5️⃣ Optional: Delete a message
-     */
+
     @DeleteMapping("/message/{messageId}")
     public String deleteMessage(@PathVariable Long messageId) {
         messageServices.deleteMessage(messageId);
