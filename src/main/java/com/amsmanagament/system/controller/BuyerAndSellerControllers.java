@@ -5,12 +5,12 @@ import com.amsmanagament.system.model.Chat;
 import com.amsmanagament.system.model.Message;
 import com.amsmanagament.system.services.ChatServices;
 import com.amsmanagament.system.services.MessageServices;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/farmerbuyer")
@@ -82,7 +82,17 @@ public class BuyerAndSellerControllers {
         return chats;
     }
 
+@GetMapping("chat/{chatId}")
+public Chat findById(@PathVariable("chatId") Long chatId) throws  Exception{
+        Optional<Chat> chat=chatServices.getChatById(chatId);
+        return chat.orElse(null);
+}
 
+@GetMapping("chat/{buyId}/{sellerId}")
+public Optional<Chat> findChatsBetween(@PathVariable("buyerid")Long buyerId, @PathVariable("sellerId") Long sellerId){
+        Optional<Chat> chat=chatServices.getChatByBuyerAndSeller(buyerId,sellerId);
+        return chat;
+}
 
 
 
