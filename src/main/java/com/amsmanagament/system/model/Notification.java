@@ -1,31 +1,36 @@
 package com.amsmanagament.system.model;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "notification") // ✅ lowercase
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Notification")
 public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-    private  Long RecivedId;
+    private Long id;
+
+    // who receives the notification (optional, but fine)
+    private Long receivedId;
+
     private LocalDateTime createdAt;
-    private Boolean read;
+
+    @Column(name = "is_read") // ✅ avoid reserved keyword
+    private Boolean read = false;
+
     private String action;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @Enumerated(EnumType.STRING)
+    private NotificationAction actionType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

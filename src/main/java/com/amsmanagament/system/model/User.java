@@ -149,7 +149,7 @@ public class User {
     private List<Seller> seller;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private Notification notification;
+    private List<Notification> notification;
 
 
     public String orElseThrow(Object o) {
