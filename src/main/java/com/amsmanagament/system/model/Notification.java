@@ -1,5 +1,6 @@
 package com.amsmanagament.system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,7 @@ public class Notification {
 
     private String message;
 
+
     @Column(name = "is_read") // ✅ avoid reserved keyword
     private Boolean read = false;
 
@@ -34,5 +36,6 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 }
