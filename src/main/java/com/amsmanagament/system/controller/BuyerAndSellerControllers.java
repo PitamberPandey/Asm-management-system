@@ -50,7 +50,7 @@ public class BuyerAndSellerControllers {
         }
     }
 
-    @PostMapping("/create/{chatId}")
+    @DeleteMapping ("/delete/{chatId}")
     public ResponseEntity<ApiChatReponse> deleteChat(@PathVariable Long chatId) {
         try {
             // Create or get chat
@@ -82,14 +82,14 @@ public class BuyerAndSellerControllers {
         return chats;
     }
 
-@GetMapping("chat/{chatId}")
+@GetMapping("/chat/{chatId}")
 public Chat findById(@PathVariable("chatId") Long chatId) throws  Exception{
         Optional<Chat> chat=chatServices.getChatById(chatId);
         return chat.orElse(null);
 }
 
-@GetMapping("chat/{buyId}/{sellerId}")
-public Optional<Chat> findChatsBetween(@PathVariable("buyerid")Long buyerId, @PathVariable("sellerId") Long sellerId){
+@GetMapping("/chat/{buyId}/{sellerId}")
+public Optional<Chat> findChatsBetween(@PathVariable("buyId")Long buyerId, @PathVariable("sellerId") Long sellerId){
         Optional<Chat> chat=chatServices.getChatByBuyerAndSeller(buyerId,sellerId);
         return chat;
 }
@@ -111,14 +111,14 @@ public Optional<Chat> findChatsBetween(@PathVariable("buyerid")Long buyerId, @Pa
         return messageServices.getMessagesByChat(chatId);
     }
 
-    @PutMapping("message/update/{messageId}")
+    @PutMapping("/message/update/{messageId}")
     public Message updateMessage(@RequestBody Message message,@PathVariable("messageId")Long messageId){
         Message message1=messageServices.updatemessage(message,messageId);
         return ResponseEntity.ok(message1).getBody();
     }
 
 
-    @PostMapping("/message/{messageId}/read")
+    @PutMapping("/message/{messageId}/read")
     public Message markAsRead(@PathVariable Long messageId) {
         return messageServices.markAsRead(messageId);
     }

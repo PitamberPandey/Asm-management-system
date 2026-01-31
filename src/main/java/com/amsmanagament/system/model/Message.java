@@ -1,5 +1,6 @@
 package com.amsmanagament.system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,6 +21,7 @@ public class Message {
     // The chat this message belongs to
     @ManyToOne(optional = false)
     @JoinColumn(name = "chat_id")
+    @JsonIgnore
     private Chat chat;
 
     // Who sent this message

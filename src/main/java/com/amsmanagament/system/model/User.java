@@ -148,6 +148,9 @@ public class User {
     @JsonIgnore
     private List<Seller> seller;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private Notification notification;
+
 
     public String orElseThrow(Object o) {
         return "";
