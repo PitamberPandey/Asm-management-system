@@ -22,6 +22,8 @@ public class Notification {
 
     private LocalDateTime createdAt;
 
+    private String message;
+
     @Column(name = "is_read") // ✅ avoid reserved keyword
     private Boolean read = false;
 

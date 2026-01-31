@@ -5,6 +5,7 @@ package com.amsmanagament.system.controller;
 import com.amsmanagament.system.Response.*;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.*;
+import com.amsmanagament.system.repo.UserRepo;
 import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.OrderUtils;
@@ -46,6 +47,12 @@ public class AdminContoller {
 
     @Autowired
     DeliveryService deliveryService;
+
+    @Autowired
+    NotificationService notificationService;
+
+    @Autowired
+    UserRepo userRepo;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) throws Exception {
@@ -293,6 +300,24 @@ public class AdminContoller {
         return ResponseEntity.ok(deliveries);
     }
 
+    @PostMapping("/createNotification")
+    public ResponseEntity<String> sendNotification(@RequestBody NotificationRequestDto request) {
 
+        User user =userRepo .findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        notificationService.notify(
+                user,
+                request.getActionType(),
+                request.getMessage(),
+                request.getReferenceId()
+        );
+
+        return ResponseEntity.ok("Notification sent successfully");
+    }
 }
+
+
+
+
+
