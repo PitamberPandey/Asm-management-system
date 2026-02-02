@@ -64,7 +64,7 @@ public class Appconfig {
     public CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+            config.setAllowedOrigins(Arrays.asList("http://http://localhost:5174"));
             config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
             config.setAllowedHeaders(Arrays.asList("Authorization","Content-Type"));
             config.setAllowCredentials(true);
