@@ -30,7 +30,7 @@ public class ChatServiceImpl implements ChatServices {
     public Chat createChat(Long buyerId, Long sellerId) {
 
         Buyer buyer = byerRepo.findById(buyerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with id " + buyerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with this id " + buyerId));
 
         Seller seller = sellerRepo.findById(sellerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Seller not found with id " + sellerId));
