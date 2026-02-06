@@ -23,6 +23,7 @@ public interface InventoryService {
 
     // Update inventory details (price, location, etc.)
     Inventory updateInventory(Long inventoryId, Inventory inventory);
+     List<Inventory> getAll();
 
     // Increase stock
     void increaseStock(Long InventoryId, int quantity);

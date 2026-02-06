@@ -52,6 +52,9 @@ public class AdminContoller {
     NotificationService notificationService;
 
     @Autowired
+    InventoryService inventoryService;
+
+    @Autowired
     UserRepo userRepo;
 
     @GetMapping("/user/{id}")
@@ -314,6 +317,12 @@ public class AdminContoller {
         );
 
         return ResponseEntity.ok("Notification sent successfully");
+    }
+
+    @GetMapping("/inventory")
+    public List<Inventory> getALL(){
+        List<Inventory> inventories=inventoryService.getAll();
+        return  inventories;
     }
 }
 

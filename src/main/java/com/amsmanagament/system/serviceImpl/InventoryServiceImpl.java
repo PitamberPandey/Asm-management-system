@@ -100,6 +100,12 @@ public class InventoryServiceImpl implements InventoryService {
         return inventoryRepo.save(existingInventory);
     }
 
+    @Override
+    public List<Inventory> getAll() {
+
+        return inventoryRepo.findAll();
+    }
+
     // ---------------- STOCK MANAGEMENT ----------------
 
     @Transactional
