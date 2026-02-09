@@ -15,4 +15,5 @@ public interface Farmerservice {
    Farmer finduser(User user)throws Exception;
    Farmer verifyFarmer(Long id) throws  Exception;
     Farmer rejectFarmer(Long id) throws  Exception;
+    void deleteFarmer(Long id) throws Exception;
 }

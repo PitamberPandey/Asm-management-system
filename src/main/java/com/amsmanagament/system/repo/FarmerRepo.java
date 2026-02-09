@@ -17,13 +17,12 @@ public interface FarmerRepo extends JpaRepository<Farmer,Long> {
 
 
     boolean existsByUser(User user);
+
     Optional<Farmer> findByUser(User user);
 
 
     @Query("SELECT f FROM Farmer f WHERE LOWER(f.farmerName) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Farmer> findByUsername(@Param("name") String name);
-
-
 
 
 }

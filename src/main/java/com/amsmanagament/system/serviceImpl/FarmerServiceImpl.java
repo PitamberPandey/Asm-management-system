@@ -103,4 +103,14 @@ public class FarmerServiceImpl implements Farmerservice {
 
         return farmerRepo.save(findFarmer);
     }
+
+    @Override
+    public void deleteFarmer(Long id) {
+        Farmer farmer = farmerRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Farmer not found with id " + id));
+
+        farmerRepo.delete(farmer);
+    }
+
 }

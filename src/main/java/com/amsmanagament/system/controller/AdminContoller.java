@@ -106,6 +106,7 @@ public class AdminContoller {
 
         return ResponseEntity.ok(apiResponse);
     }
+
     @PostMapping("farmer/reject/{id}")
     public ResponseEntity<ApiCreateResponse> rejectFarmer(@PathVariable Long id) throws Exception {
 
@@ -127,7 +128,7 @@ public class AdminContoller {
     }
 
     @GetMapping("/buyer")
-    public  List<Buyer> getAllBuyer() throws Exception {
+    public List<Buyer> getAllBuyer() throws Exception {
         return buyerServices.getAllBuyers();
     }
 
@@ -148,6 +149,7 @@ public class AdminContoller {
         ApiResponseCategory apiResponse = new ApiResponseCategory("Category created successfully", true, createdCategory);
         return ResponseEntity.ok(apiResponse);
     }
+
     @PutMapping("/update/category")
     public ResponseEntity<ApiResponseCategory> updateCategory(@RequestBody Category category) throws Exception {
         Category updatedCategory = categoryService.updateCatogory(category);
@@ -194,13 +196,13 @@ public class AdminContoller {
 
     @GetMapping("/seller")
     public List<Seller> sellers() throws Exception {
-        List<Seller> sellers=sellerService.getAllSellers();
+        List<Seller> sellers = sellerService.getAllSellers();
         return sellers;
     }
 
 
     @GetMapping("seller/{id}")
-        public Seller getSeller(@PathVariable("id") Long id) throws Exception {
+    public Seller getSeller(@PathVariable("id") Long id) throws Exception {
         try {
             Seller seller = sellerService.getSellerById(id);
             return seller;
@@ -209,6 +211,7 @@ public class AdminContoller {
         }
 
     }
+
     @DeleteMapping("seller/{id}")
     public Seller deleteseller(@PathVariable("id") Long id) throws Exception {
         try {
@@ -221,19 +224,19 @@ public class AdminContoller {
     }
 
 
-
-    @PutMapping ("/update/order/{id}")
-    public ResponseEntity<ApiOrderResponse> Updateorder(@RequestBody Order order,@PathVariable("id") Long id) throws Exception{
+    @PutMapping("/update/order/{id}")
+    public ResponseEntity<ApiOrderResponse> Updateorder(@RequestBody Order order, @PathVariable("id") Long id) throws Exception {
         try {
-            Order order1 =orderServices.updateOrder(id, order);
-            ApiOrderResponse api=new ApiOrderResponse("Order Update successfully",true,order1);
+            Order order1 = orderServices.updateOrder(id, order);
+            ApiOrderResponse api = new ApiOrderResponse("Order Update successfully", true, order1);
             return ResponseEntity.ok(api);
-        }catch (Exception e){
-            ApiOrderResponse api=new ApiOrderResponse("failed to update order",false,null);
+        } catch (Exception e) {
+            ApiOrderResponse api = new ApiOrderResponse("failed to update order", false, null);
             return ResponseEntity.badRequest().body(api);
         }
 
     }
+
     @DeleteMapping("/delete/order/{id}")
     public ResponseEntity<ApiOrderResponse> deleteOrder(@PathVariable("id") Long id) throws Exception {
         try {
@@ -245,6 +248,7 @@ public class AdminContoller {
             return ResponseEntity.badRequest().body(api);
         }
     }
+
     @GetMapping("/orders")
     public ResponseEntity<List<Order>> getOrders() throws Exception {
         List<Order> orders = orderServices.getAllOrders();
@@ -291,13 +295,13 @@ public class AdminContoller {
         return ResponseEntity.ok(order);
     }
 
-  @GetMapping("/orderitems")
+    @GetMapping("/orderitems")
     public ResponseEntity<List<OrderItem>> getAllOrderItems() throws Exception {
         List<OrderItem> orderItems = orderItemService.getAllOrderItems();
         return ResponseEntity.ok(orderItems);
     }
 
-@GetMapping("/deliveries")
+    @GetMapping("/deliveries")
     public ResponseEntity<List<Delivery>> getAllDeliveries() throws Exception {
         List<Delivery> deliveries = deliveryService.getAllDeliveries();
         return ResponseEntity.ok(deliveries);
@@ -306,7 +310,7 @@ public class AdminContoller {
     @PostMapping("/createNotification")
     public ResponseEntity<String> sendNotification(@RequestBody NotificationRequestDto request) {
 
-        User user =userRepo .findById(request.getUserId())
+        User user = userRepo.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         notificationService.notify(
@@ -320,11 +324,24 @@ public class AdminContoller {
     }
 
     @GetMapping("/inventory")
-    public List<Inventory> getALL(){
-        List<Inventory> inventories=inventoryService.getAll();
-        return  inventories;
+    public List<Inventory> getALL() {
+        List<Inventory> inventories = inventoryService.getAll();
+        return inventories;
+    }
+
+    @DeleteMapping("/delete/farmer/{id}")
+    public ResponseEntity<FarmerReponse> deleteFarmer(@PathVariable Long id) throws Exception {
+        farmerservice.deleteFarmer(id);
+
+        FarmerReponse response = new FarmerReponse(
+                "Farmer deleted successfully",
+                true,
+                null
+        );
+        return ResponseEntity.ok(response);
     }
 }
+
 
 
 
