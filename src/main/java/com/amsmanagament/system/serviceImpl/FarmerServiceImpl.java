@@ -10,6 +10,8 @@ import com.amsmanagament.system.services.Farmerservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -70,6 +72,8 @@ public class FarmerServiceImpl implements Farmerservice {
         exitinguser.setFarmerAddress(farmer.getFarmerAddress());
         exitinguser.setDocument(farmer.getDocument());
         exitinguser.setWardNo(farmer.getWardNo());
+        exitinguser.setUpdatedAt(LocalDateTime.now());
+
 
         return farmerRepo.save(exitinguser);
     }
