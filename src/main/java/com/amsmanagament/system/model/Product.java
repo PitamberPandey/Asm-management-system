@@ -30,6 +30,7 @@ public class Product {
     private String productName;
     private Double price;
     private boolean available;
+    @Column(length = 1000)
     private String imageUrl;
     private String description;
     private LocalDateTime createdAt;

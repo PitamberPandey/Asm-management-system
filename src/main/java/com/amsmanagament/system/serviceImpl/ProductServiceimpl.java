@@ -72,6 +72,7 @@ ProductRepo productRepo;
         existingProduct.setProductName(product.getProductName());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
+        existingProduct.setImageUrl(product.getImageUrl());
         existingProduct.setCategory(product.getCategory());
         productRepo.save(existingProduct);
             
