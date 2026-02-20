@@ -32,11 +32,11 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public boolean isProductInStock(Long productId, int requiredQuantity) {
-        Optional<Inventory> inventory = inventoryRepo.findById(productId);
-        if(inventory.get().getQuantity()>requiredQuantity){
-            return true;
-        }
-        return false;
+
+        Inventory inventory = inventoryRepo.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found for product id " + productId));
+
+        return inventory.getQuantity() >= requiredQuantity;
     }
 
     // ---------------- GET INVENTORY ----------------
