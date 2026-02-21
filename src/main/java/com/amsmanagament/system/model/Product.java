@@ -32,6 +32,7 @@ public class Product {
     private boolean available;
     @Column(length = 1000)
     private String imageUrl;
+    private String address;
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

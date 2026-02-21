@@ -7,10 +7,7 @@ import com.amsmanagament.system.Response.ApiOrderResponse;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.repo.UserRepo;
-import com.amsmanagament.system.services.BuyerServices;
-import com.amsmanagament.system.services.OrderItemService;
-import com.amsmanagament.system.services.OrderServices;
-import com.amsmanagament.system.services.SellerService;
+import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,6 +35,9 @@ public class BuyerController {
 
     @Autowired
     private OrderItemService orderItemService;
+
+    @Autowired
+    private ProductService productService;
 
     // Create buyer profile
     @PostMapping("/create")
@@ -195,4 +195,12 @@ public class BuyerController {
         return ResponseEntity.ok(items);
     }
 
+    @GetMapping("/products/search")  // fixed typo
+    public List<Product> searchProducts(String keyword) throws Exception {
+        List<Product> products = productService.getProductByaddress(keyword);
+        if (products.isEmpty()) {
+            throw new Exception("Product not found with keyword: " + keyword);
+        }
+        return products;
+    }
 }

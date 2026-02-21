@@ -29,4 +29,5 @@ public interface ProductService {
 
     // Get products by seller/creator
     List<Product> getProductsBySeller(Long userId);
-}
+
+    List<Product> getProductByaddress(String address);}

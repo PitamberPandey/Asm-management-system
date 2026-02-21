@@ -7,6 +7,8 @@ import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.Product;
 import com.amsmanagament.system.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,4 +31,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
 
     User findByFarmerId(long id);
+
+    @Query("SELECT i FROM Product i WHERE LOWER(i.address) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Product> searchByAddress(@Param("keyword") String keyword);
+
 }

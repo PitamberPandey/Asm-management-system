@@ -57,7 +57,8 @@ ProductRepo productRepo;
         newProduct.setPrice(product.getPrice());
         newProduct.setAvailable(product.isAvailable());
         newProduct.setImageUrl(product.getImageUrl());
-        newProduct.setCategory(product.getCategory()); // expects nested JSON { "id": 5 }
+        newProduct.setCategory(product.getCategory());
+        newProduct.setAddress(product.getAddress());// expects nested JSON { "id": 5 }
         newProduct.setFarmer(farmer);
         newProduct.setCreatedAt(LocalDateTime.now());
         newProduct.setUpdatedAt(LocalDateTime.now());
@@ -113,7 +114,7 @@ ProductRepo productRepo;
     public List<Product> getProductsByCategory(Long categoryId) {
         // Check if category exists
         Category category = catogoriesRepo.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + categoryId));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + categoryId));
 
         // Fetch products by category
         List<Product> products = productRepo.findByCategory(category);
@@ -146,9 +147,14 @@ ProductRepo productRepo;
         return products;
     }
 
-
-
-
+    @Override
+    public List<Product> getProductByaddress(String address)  {
+        List<Product> products=productRepo.searchByAddress(address);
+        if(products.isEmpty()){
+            throw new ResourceNotFoundException("Product not found with address: "+address);
+        }
+        return products;
+    }
 
 
 }
