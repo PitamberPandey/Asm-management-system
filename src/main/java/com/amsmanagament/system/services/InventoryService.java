@@ -15,6 +15,7 @@ public interface InventoryService {
 
     // Get inventory by product ID
     Inventory getInventoryByProductId(Long productId);
+    List<Inventory> searchInventoryByProductName(String keyword);
 
     List<Inventory> getAllInventor();
 

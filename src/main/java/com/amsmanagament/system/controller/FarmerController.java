@@ -305,6 +305,12 @@ public class FarmerController {
         }
     }
 
+    @GetMapping("/search/inventory")
+    public ResponseEntity<List<Inventory>> searchInventoryByProductName(@RequestParam String keyword) {
+        List<Inventory> inventoryList = inventoryService.searchInventoryByProductName(keyword);
+        return ResponseEntity.ok(inventoryList);
+    }
+
 }
 
 

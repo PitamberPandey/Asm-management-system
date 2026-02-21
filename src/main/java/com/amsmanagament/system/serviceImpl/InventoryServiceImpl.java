@@ -59,6 +59,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public List<Inventory> searchInventoryByProductName(String keyword) {
+        return inventoryRepo.searchByProductName(keyword);
+    }
+
+    @Override
     public List<Inventory> getAllInventor() {
         return inventoryRepo.findAll();
     }
