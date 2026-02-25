@@ -23,4 +23,5 @@ public interface ByerRepo extends JpaRepository<Buyer,Long> {
     Optional<Buyer> findByUser(User user);
 
 
+
 }

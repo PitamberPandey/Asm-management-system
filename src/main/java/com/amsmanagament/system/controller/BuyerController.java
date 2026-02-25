@@ -82,14 +82,11 @@ public class BuyerController {
 
     @PostMapping("/create/order")
     public ResponseEntity<ApiOrderResponse> createorder(@RequestBody Order order) throws Exception{
-        try {
+
             Order order1 =orderServices.createOrder(order);
             ApiOrderResponse api=new ApiOrderResponse("Order created successfully",true,order1);
             return ResponseEntity.ok(api);
-        }catch (Exception e){
-            ApiOrderResponse api=new ApiOrderResponse("failed to create order",false,null);
-            return ResponseEntity.badRequest().body(api);
-        }
+
 
     }
 

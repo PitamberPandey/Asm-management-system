@@ -24,7 +24,8 @@ public class Order {
     private LocalDateTime orderDate;
     private LocalDateTime orderupdatedate;
 
-    private String status; // PENDING, COMPLETED, CANCELLED
+    private String status;
+    private Long totalPrice;// PENDING, COMPLETED, CANCELLED
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;

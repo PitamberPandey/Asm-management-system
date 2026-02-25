@@ -5,6 +5,7 @@ import com.amsmanagament.system.model.Buyer;
 import com.amsmanagament.system.model.Order;
 import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.repo.ByerRepo;
+import com.amsmanagament.system.repo.OrderItemRepo;
 import com.amsmanagament.system.repo.OrderRepo;
 import com.amsmanagament.system.services.BuyerServices;
 import com.amsmanagament.system.services.OrderServices;
@@ -32,36 +33,43 @@ public class OrderServiceImpl implements OrderServices {
     @Autowired
     ByerRepo byerRepo;
 
+    @Autowired
+    OrderItemRepo orderItemRepo;
+
     // ---------------- CREATE ORDER ----------------
+
     @Override
     public Order createOrder(Order order) throws Exception {
 
+        String phoneNumber = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal()
+                .toString();
 
-        String phoneNumber=SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-
-
-
-        // Find user by phone number
         User user = userService.findUserByNumber(phoneNumber);
         if (user == null) {
-            throw new ResourceNotFoundException("User not found");
+            throw new RuntimeException("User not found");
         }
 
+        // ✅ Buyer fetch
+        Buyer buyer = byerRepo.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("Buyer profile not found"));
 
-
-        // Set order fields
+        // ✅ Set fields
+        order.setUser(user);
+        order.setBuyer(buyer);
         order.setOrderDate(LocalDateTime.now());
         order.setOrderupdatedate(LocalDateTime.now());
-        order.setUser(user);
 
-
-
-        // Default status if not provided
         if (order.getStatus() == null || order.getStatus().isEmpty()) {
             order.setStatus("PENDING");
         }
 
-        // Save order
+        // total calculation
+        Long total = orderItemRepo.calculateTotalAmountByOrderId(order.getId());
+        order.setTotalPrice(total);
+
         return orderRepo.save(order);
     }
 

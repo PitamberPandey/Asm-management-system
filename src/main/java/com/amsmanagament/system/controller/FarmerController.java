@@ -34,6 +34,9 @@ public class FarmerController {
     @Autowired
     InventoryService inventoryService;
 
+    @Autowired
+    OrderItemService orderitemService;
+
     @GetMapping("/user/{id}")
     public ResponseEntity<Farmer> getUserById(@PathVariable Long id) throws Exception {
         Farmer user = farmerservice.findById(id);
@@ -310,6 +313,13 @@ public class FarmerController {
         List<Inventory> inventoryList = inventoryService.searchInventoryByProductName(keyword);
         return ResponseEntity.ok(inventoryList);
     }
+
+    @GetMapping("/orders/{orderId}/total-price")
+    public Long calculateTotalPrice(@PathVariable Long orderId) {
+        return orderitemService.calculateTotalAmountByOrderId(orderId);
+    }
+
+
 
 }
 

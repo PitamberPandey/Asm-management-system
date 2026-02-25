@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -38,7 +39,7 @@ private OrderRepo orderRepo;
         orderItem.setOrder(order);
         orderItem.setProduct(product);
         orderItem.setQuantity(quantity);
-        orderItem.setPrice(product.getPrice() * quantity);
+        orderItem.setPrice(product.getPrice() );
         return orderItemRepo.save(orderItem);
 
     }
@@ -47,7 +48,7 @@ private OrderRepo orderRepo;
     public OrderItem updateOrderItemQuantity(Long orderItemId, int quantity) {
         OrderItem orderItem= orderItemRepo.findById(orderItemId).orElseThrow(()->new ResourceNotFoundException("Order item not found"));
         orderItem.setQuantity(quantity);
-        orderItem.setPrice(orderItem.getProduct().getPrice()*quantity);
+        orderItem.setPrice(orderItem.getProduct().getPrice());
 
         return orderItemRepo.save(orderItem);
     }
@@ -75,5 +76,14 @@ private OrderRepo orderRepo;
     public List<OrderItem> getOrderItemsByOrderId(Long orderId) {
         Order order = orderRepo.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         return orderItemRepo.findByOrder(order);
+    }
+
+    @Override
+    public Long calculateTotalAmountByOrderId(Long orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+       return orderItemRepo.calculateTotalAmountByOrderId(orderId);
+
     }
 }

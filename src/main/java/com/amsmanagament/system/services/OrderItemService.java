@@ -16,4 +16,9 @@ public interface OrderItemService {
     List<OrderItem> getAllOrderItems();
 
     List<OrderItem> getOrderItemsByOrderId(Long orderId);
+    Long calculateTotalAmountByOrderId(Long orderId);
+
+
+
+
 }

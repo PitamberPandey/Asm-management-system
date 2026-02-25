@@ -1,5 +1,6 @@
 package com.amsmanagament.system.repo;
 
+import com.amsmanagament.system.model.Buyer;
 import com.amsmanagament.system.model.Order;
 import com.amsmanagament.system.model.User;
 import org.aspectj.weaver.ast.Or;
@@ -15,6 +16,7 @@ public interface OrderRepo  extends JpaRepository<Order,Long> {
     Optional<Order> findById(Long id);
 
     List<Order> getOrderByUser(User user);
+
 
 
 
