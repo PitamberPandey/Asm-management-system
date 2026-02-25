@@ -40,6 +40,12 @@ private OrderRepo orderRepo;
         orderItem.setProduct(product);
         orderItem.setQuantity(quantity);
         orderItem.setPrice(product.getPrice() );
+        Long total = orderItemRepo.calculateTotalAmountByOrderId(orderId);
+
+        order.setTotalPrice(total == null ? 0L : total);
+
+        orderRepo.save(order);   // 🔥 update order table
+
         return orderItemRepo.save(orderItem);
 
     }

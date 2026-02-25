@@ -67,8 +67,8 @@ public class OrderServiceImpl implements OrderServices {
         }
 
         // total calculation
-        Long total = orderItemRepo.calculateTotalAmountByOrderId(order.getId());
-        order.setTotalPrice(total);
+
+        order.setTotalPrice(0L);
 
         return orderRepo.save(order);
     }
