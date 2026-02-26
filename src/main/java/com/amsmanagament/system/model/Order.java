@@ -34,7 +34,12 @@ public class Order {
     @JoinColumn(name = "buyer_id")
     private Buyer buyer;
     private Double latitude;   // e.g., 27.700769 for Kathmandu
-    private Double longitude;  // e.g., 85.300140 for Kathmandu
+    private Double longitude;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
+
+    @Enumerated(EnumType.STRING)
+    private Payment_Status paymentStatus;
 
 }
 

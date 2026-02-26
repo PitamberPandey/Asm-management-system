@@ -3,6 +3,7 @@ package com.amsmanagament.system.serviceImpl;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Buyer;
 import com.amsmanagament.system.model.Order;
+import com.amsmanagament.system.model.Payment_Status;
 import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.repo.ByerRepo;
 import com.amsmanagament.system.repo.OrderItemRepo;
@@ -65,6 +66,10 @@ public class OrderServiceImpl implements OrderServices {
         if (order.getStatus() == null || order.getStatus().isEmpty()) {
             order.setStatus("PENDING");
         }
+        if(order.getPaymentStatus()==null ){
+            order.setPaymentStatus(Payment_Status.PENDING);
+        }
+        order.setPaymentMethod(order.getPaymentMethod());
 
         // total calculation
 
