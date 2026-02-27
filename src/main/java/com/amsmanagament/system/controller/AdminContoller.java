@@ -346,6 +346,11 @@ public class AdminContoller {
         List<User> users = userService.getAllUsers();
         return users;
     }
+
+    @GetMapping("/search/user")
+    public List<User> searchUsersByName(@RequestParam String name) throws Exception {
+        return userService.searchUsersByUsername(name);
+    }
 }
 
 

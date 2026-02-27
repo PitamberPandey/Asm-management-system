@@ -100,5 +100,10 @@ return  userRepo.save(user);
 
     }
 
+    @Override
+    public List<User> searchUsersByUsername(String username) throws Exception {
+        return userRepo.searchByFullName(username);
+    }
+
 
 }

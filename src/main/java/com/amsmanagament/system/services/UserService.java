@@ -18,6 +18,8 @@ public interface UserService {
         public  User deleteUser(Long id)throws Exception;
         public List<User> getAllUsers() throws Exception;
 
+        public  List<User> searchUsersByUsername(String username) throws Exception;
+
 
 
 }
