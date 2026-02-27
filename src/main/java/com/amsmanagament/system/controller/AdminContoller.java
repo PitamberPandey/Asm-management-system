@@ -340,6 +340,12 @@ public class AdminContoller {
         );
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/get/user")
+    public List<User> getAllUsers() throws Exception {
+        List<User> users = userService.getAllUsers();
+        return users;
+    }
 }
 
 

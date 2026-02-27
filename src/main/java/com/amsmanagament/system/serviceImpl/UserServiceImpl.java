@@ -93,5 +93,12 @@ return  userRepo.save(user);
         return existingUser;
     }
 
+    @Override
+    public List<User> getAllUsers() {
+        List<User> users=userRepo.findAll();
+        return users;
+
+    }
+
 
 }
