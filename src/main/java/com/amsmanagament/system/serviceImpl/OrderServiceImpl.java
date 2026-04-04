@@ -1,10 +1,7 @@
 package com.amsmanagament.system.serviceImpl;
 
 import com.amsmanagament.system.exception.ResourceNotFoundException;
-import com.amsmanagament.system.model.Buyer;
-import com.amsmanagament.system.model.Order;
-import com.amsmanagament.system.model.Payment_Status;
-import com.amsmanagament.system.model.User;
+import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.repo.ByerRepo;
 import com.amsmanagament.system.repo.OrderItemRepo;
 import com.amsmanagament.system.repo.OrderRepo;
@@ -12,6 +9,7 @@ import com.amsmanagament.system.services.BuyerServices;
 import com.amsmanagament.system.services.OrderServices;
 import com.amsmanagament.system.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +34,9 @@ public class OrderServiceImpl implements OrderServices {
 
     @Autowired
     OrderItemRepo orderItemRepo;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     // ---------------- CREATE ORDER ----------------
 
@@ -69,7 +70,13 @@ public class OrderServiceImpl implements OrderServices {
         if(order.getPaymentStatus()==null ){
             order.setPaymentStatus(Payment_Status.PENDING);
         }
-        order.setPaymentMethod(order.getPaymentMethod());
+        // ✅ Payment Logic
+        if (order.getPaymentMethod() == PaymentMethod.CASH_ON_DELIVERY) {
+            order.setPaymentStatus(Payment_Status.COMPLETED);
+        } else if (order.getPaymentMethod() == PaymentMethod.ONLINE_PAYMENT) {
+            order.setPaymentStatus(Payment_Status.PENDING);
+        }
+
 
         // total calculation
 
@@ -98,7 +105,22 @@ public class OrderServiceImpl implements OrderServices {
             existingOrder.setBuyer(buyer);
         }
 
-        return orderRepo.save(existingOrder);
+        Order savedOrder = orderRepo.save(existingOrder);
+
+        // 🔥 SEND REAL-TIME LOCATION TO FRONTEND
+        if (savedOrder.getLatitude() != null && savedOrder.getLongitude() != null) {
+
+            var location = new java.util.HashMap<String, Object>();
+            location.put("lat", savedOrder.getLatitude());
+            location.put("lng", savedOrder.getLongitude());
+
+            messagingTemplate.convertAndSend(
+                    "/topic/location/" + savedOrder.getId(),
+                    location
+            );
+        }
+
+        return savedOrder;
     }
 
     // ---------------- DELETE ORDER ----------------

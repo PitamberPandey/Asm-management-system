@@ -41,5 +41,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private Payment_Status paymentStatus;
 
+    // One Order → Many Payment attempts
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<Payment> payments;
+
 }
 
