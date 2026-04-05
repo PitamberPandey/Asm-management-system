@@ -4,27 +4,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.*;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    // Correct SLF4J Logger (no casting!)
     private static final Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic"); // frontend listens here
+        config.enableSimpleBroker("/topic", "/queue"); // add /queue for per-user
         config.setApplicationDestinationPrefixes("/app");
-        logger.info("Message broker configured with /topic and /app prefixes");
+        config.setUserDestinationPrefix("/user"); // important for private messages
+        logger.info("Message broker configured with /topic, /queue, and /user prefixes");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("*") // allow all origins
-                .withSockJS();          // enable SockJS fallback
+                .setAllowedOriginPatterns("*") // allow all origins
+                .withSockJS();                 // enable SockJS fallback
         logger.info("WebSocket endpoint /ws registered with SockJS support");
     }
 }

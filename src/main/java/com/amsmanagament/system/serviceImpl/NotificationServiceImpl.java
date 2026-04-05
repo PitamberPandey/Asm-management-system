@@ -7,6 +7,7 @@ import com.amsmanagament.system.model.User;
 import com.amsmanagament.system.repo.NotificationmRepo;
 import com.amsmanagament.system.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
     private NotificationmRepo notificationRepo;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @Override
     public void notify(User user, NotificationAction actionType, String message, Long referenceId) {
@@ -28,7 +31,13 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setRead(false);
         notification.setCreatedAt(LocalDateTime.now());
 
-        notificationRepo.save(notification);
+        Notification savedNotification = notificationRepo.save(notification);
+
+        // 2️⃣ Push notification via WebSocket to the specific user
+        messagingTemplate.convertAndSend(
+                "/user/" + user.getId() + "/queue/notifications", // per-user queue
+                savedNotification
+        );
     }
 
 

@@ -79,6 +79,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setProfileImage(user.getProfileImage());
         existingUser.setGender(user.getGender());
         existingUser.setDob(user.getDob());
+
 return  userRepo.save(user);
 
     }

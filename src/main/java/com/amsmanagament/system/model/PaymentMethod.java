@@ -1,6 +1,7 @@
 package com.amsmanagament.system.model;
 
 public enum PaymentMethod {
-    ONLINE_PAYMENT,
-    CASH_ON_DELIVERY
+    KHALTI,
+    CASH_ON_DELIVERY,
+    ONLINE_PAYMENT
 }

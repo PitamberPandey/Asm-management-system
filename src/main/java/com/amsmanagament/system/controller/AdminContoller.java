@@ -323,6 +323,29 @@ public class AdminContoller {
         return ResponseEntity.ok("Notification sent successfully");
     }
 
+    @GetMapping("/notifications/{userId}")
+    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable Long userId) {
+        List<Notification> notifications = notificationService.getUserNotifications(userId);
+        return ResponseEntity.ok(notifications);
+    }
+    @GetMapping("/notifications")
+    public ResponseEntity<List<Notification>> getAllNotifications() {
+        List<Notification> notifications = notificationService.find();
+        return ResponseEntity.ok(notifications);
+    }
+    @DeleteMapping("/notifications/delete/{id}")
+    public ResponseEntity<Notification> deleteNotification(@PathVariable Long id) {
+        Notification deletedNotification = notificationService.deleteNotification(id);
+        return ResponseEntity.ok(deletedNotification);
+    }
+
+    @PutMapping("/notifications/markAsRead/{id}")
+    public ResponseEntity<String> markNotificationAsRead(@PathVariable Long id) {
+        notificationService.markAsRead(id);
+        return ResponseEntity.ok("Notification marked as read");
+    }
+
+
     @GetMapping("/inventory")
     public List<Inventory> getALL() {
         List<Inventory> inventories = inventoryService.getAll();

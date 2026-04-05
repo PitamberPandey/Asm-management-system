@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderServices {
         // ✅ Payment Logic
         if (order.getPaymentMethod() == PaymentMethod.CASH_ON_DELIVERY) {
             order.setPaymentStatus(Payment_Status.COMPLETED);
-        } else if (order.getPaymentMethod() == PaymentMethod.ONLINE_PAYMENT) {
+        } else if (order.getPaymentMethod() == PaymentMethod.KHALTI) {
             order.setPaymentStatus(Payment_Status.PENDING);
         }
 
