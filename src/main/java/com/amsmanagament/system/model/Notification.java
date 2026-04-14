@@ -1,5 +1,6 @@
 package com.amsmanagament.system.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "notification") // ✅ lowercase
+@Table(name = "notification")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,24 +19,27 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // who receives the notification (optional, but fine)
-    private Long receivedId;
-
-    private LocalDateTime createdAt;
+    // reference id (postId, commentId, etc.)
+    private Long referenceId;
 
     private String message;
 
-
-    @Column(name = "is_read") // ✅ avoid reserved keyword
+    @Column(name = "is_read")
     private Boolean read = false;
 
-    private String action;
+    private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     private NotificationAction actionType;
 
+    // who triggered action
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "sender_id")
+    private User sender;
+
+    // who receives notification
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 }

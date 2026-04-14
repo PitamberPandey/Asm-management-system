@@ -1,9 +1,7 @@
 package com.amsmanagament.system.serviceImpl;
 
 import com.amsmanagament.system.exception.ResourceNotFoundException;
-import com.amsmanagament.system.model.Farmer;
-import com.amsmanagament.system.model.Farmer_Status;
-import com.amsmanagament.system.model.User;
+import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.repo.FarmerRepo;
 import com.amsmanagament.system.repo.UserRepo;
 import com.amsmanagament.system.services.Farmerservice;
@@ -23,6 +21,8 @@ public class FarmerServiceImpl implements Farmerservice {
 
     @Autowired
     UserRepo userRepo;
+    @Autowired
+    private NotificationEventPublisher eventPublisher;
 
 
     @Override
@@ -60,7 +60,20 @@ public class FarmerServiceImpl implements Farmerservice {
         farmerToSave.setDocument(farmer.getDocument());
         farmerToSave.setStatus(Farmer_Status.STATUS_PENDING);
 
-        return farmerRepo.save(farmerToSave);
+        Farmer savedFarmer = farmerRepo.save(farmerToSave);
+
+        // 🔔 PUSH NOTIFICATION HERE
+        eventPublisher.publish(
+                new NotificationEvent(
+                        loggedInUser,   // receiver
+                        null,           // sender (system)
+                        NotificationAction.SYSTEM_ALERT,
+                        "🌾 Farmer profile submitted successfully (ID: " + savedFarmer.getId() + ")",
+                        savedFarmer.getId()
+                )
+        );
+
+        return savedFarmer;
     }
 
 

@@ -1,10 +1,12 @@
 package com.amsmanagament.system.serviceImpl;
 
+
+
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Notification;
 import com.amsmanagament.system.model.NotificationAction;
 import com.amsmanagament.system.model.User;
-import com.amsmanagament.system.repo.NotificationmRepo;
+import com.amsmanagament.system.repo.NotificationRepo;
 import com.amsmanagament.system.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,30 +19,34 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
-    private NotificationmRepo notificationRepo;
+    private NotificationRepo notificationRepo;
+
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public void notify(User user, NotificationAction actionType, String message, Long referenceId) {
+    public void createNotification(User receiver, User sender,
+                                   NotificationAction actionType,
+                                   String message,
+                                   Long referenceId) {
+
         Notification notification = new Notification();
-        notification.setUser(user);
+        notification.setUser(receiver);
+        notification.setSender(sender);
         notification.setActionType(actionType);
         notification.setMessage(message);
-        notification.setReceivedId(referenceId);
+        notification.setReferenceId(referenceId);
         notification.setRead(false);
         notification.setCreatedAt(LocalDateTime.now());
 
-        Notification savedNotification = notificationRepo.save(notification);
+        Notification saved = notificationRepo.save(notification);
 
-        // 2️⃣ Push notification via WebSocket to the specific user
+        // 🔔 send to specific user
         messagingTemplate.convertAndSend(
-                "/user/" + user.getId() + "/queue/notifications", // per-user queue
-                savedNotification
+                "/user/" + receiver.getId() + "/queue/notifications",
+                saved
         );
     }
-
-
 
     @Override
     public List<Notification> getUserNotifications(Long userId) {
@@ -48,24 +54,28 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<Notification> find() {
-
+    public List<Notification> getAllNotifications() {
         return notificationRepo.findAll();
     }
 
     @Override
-    public Notification deleteNotification(Long id) {
-        Notification notification = notificationRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
-        notificationRepo.delete(notification);
-        return notification;
+    public void markAsRead(Long id) {
+        Notification n = notificationRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
+        n.setRead(true);
+        notificationRepo.save(n);
     }
 
     @Override
-    public void markAsRead(Long notificationId) {
-        Notification notification = notificationRepo.findById(notificationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
-        notification.setRead(true);
-        notificationRepo.save(notification);
+    public Notification deleteNotification(Long id) {
+        Notification n = notificationRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
+        notificationRepo.delete(n);
+        return n;
+    }
+
+    @Override
+    public int getUnreadCount(Long userId) {
+        return notificationRepo.countByUserIdAndReadFalse(userId);
     }
 }

@@ -313,13 +313,13 @@ public class AdminContoller {
         User user = userRepo.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        notificationService.notify(
+        notificationService.createNotification(
                 user,
+                null, // sender can be null for admin notifications
                 request.getActionType(),
                 request.getMessage(),
                 request.getReferenceId()
         );
-
         return ResponseEntity.ok("Notification sent successfully");
     }
 
@@ -330,7 +330,7 @@ public class AdminContoller {
     }
     @GetMapping("/notifications")
     public ResponseEntity<List<Notification>> getAllNotifications() {
-        List<Notification> notifications = notificationService.find();
+        List<Notification> notifications = notificationService.getAllNotifications();
         return ResponseEntity.ok(notifications);
     }
     @DeleteMapping("/notifications/delete/{id}")

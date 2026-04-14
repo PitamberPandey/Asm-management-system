@@ -192,6 +192,19 @@ public class FarmerController {
         }
     }
 
+    @PostMapping("/delivery/compelete/{id}")
+    public ResponseEntity<ApiDeliveryResponse> completeDelivery(@PathVariable ("id") Long id) throws Exception {
+        try {
+            Delivery delivery = deliveryService.compeleteDelivery(id);
+            ApiDeliveryResponse apiResponse = new ApiDeliveryResponse("Delivery completed successfully", true, delivery);
+            return ResponseEntity.ok(apiResponse);
+        }catch (Exception e){
+            ApiDeliveryResponse apiResponse = new ApiDeliveryResponse("Failed to complete delivery: " + e.getMessage(), false, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+        }
+
+    }
+
     @DeleteMapping("/delete/delivery/{id}")
     public ResponseEntity<ApiDeliveryResponse> deleteDelivery(@PathVariable ("id") Long id) {
         try {

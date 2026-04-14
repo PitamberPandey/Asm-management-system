@@ -18,4 +18,6 @@ public interface DeliveryService {
 
     void deleteDelivery(Long id);
 
+    Delivery compeleteDelivery(Long id);
+
 }

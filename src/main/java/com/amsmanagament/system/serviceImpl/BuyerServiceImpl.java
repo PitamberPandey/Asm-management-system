@@ -1,8 +1,7 @@
 package com.amsmanagament.system.serviceImpl;
 
 import com.amsmanagament.system.exception.ResourceNotFoundException;
-import com.amsmanagament.system.model.Buyer;
-import com.amsmanagament.system.model.User;
+import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.repo.ByerRepo;
 import com.amsmanagament.system.repo.FarmerRepo;
 import com.amsmanagament.system.repo.UserRepo;
@@ -25,6 +24,8 @@ public class BuyerServiceImpl implements BuyerServices {
 
     @Autowired
     FarmerRepo farmerRepo;
+    @Autowired
+    private NotificationEventPublisher eventPublisher;
 
 
     @Override
@@ -50,8 +51,18 @@ public class BuyerServiceImpl implements BuyerServices {
         newBuyer.setContactNumber(buyer.getContactNumber());
         newBuyer.setUser(loggedInUser);
         newBuyer.setUpdatedAt(LocalDateTime.now());
+        Buyer savedBuyer = buyerRepository.save(newBuyer);
+        eventPublisher.publish(
+                new NotificationEvent(
+                        loggedInUser,  // receiver
+                        null,          // sender (system)
+                        NotificationAction.SYSTEM_ALERT,
+                        "🎉 Buyer profile created successfully! (ID: " + savedBuyer.getUser().getId() + ")",
+                        savedBuyer.getId()
+                )
+        );
 
-        return buyerRepository.save(newBuyer); // ✅ Save the new object
+        return savedBuyer;// ✅ Save the new object
     }
 
 

@@ -38,6 +38,9 @@ public class OrderServiceImpl implements OrderServices {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    private NotificationEventPublisher eventPublisher;
+
     // ---------------- CREATE ORDER ----------------
 
     @Override
@@ -81,8 +84,20 @@ public class OrderServiceImpl implements OrderServices {
         // total calculation
 
         order.setTotalPrice(0L);
+        Order savedOrder = orderRepo.save(order);
 
-        return orderRepo.save(order);
+        // 🔔 SEND NOTIFICATION HERE
+        eventPublisher.publish(
+                new NotificationEvent(
+                        user,  // receiver
+                        null,  // sender (system)
+                        NotificationAction.ORDER_STATUS, // or ORDER_PLACED (better)
+                        "🛒 Order placed successfully (ID: " + savedOrder.getId() + ")",
+                        savedOrder.getId()
+                )
+        );
+
+        return savedOrder;
     }
 
 
