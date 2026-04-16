@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + user.getId()));
         existingUser.setFullName(user.getFullName());
         existingUser.setPhoneNumber(user.getPhoneNumber());
-        existingUser.setPassword(user.getPassword());
 
         if(user.getRole() == null) {
             user.setRole(User_Role.ROLE_FARM);
