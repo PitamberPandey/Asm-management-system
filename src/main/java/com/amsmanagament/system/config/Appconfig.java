@@ -45,7 +45,9 @@ public class Appconfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtValidator, UsernamePasswordAuthenticationFilter.class)
+
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
 
         return http.build();
     }
@@ -67,6 +69,10 @@ public class Appconfig {
             config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
             config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
             config.setAllowedHeaders(Arrays.asList("Authorization","Content-Type"));
+
+            config.setAllowedHeaders(Arrays.asList("*"));
+
+
             config.setAllowCredentials(true);
             return config;
         };

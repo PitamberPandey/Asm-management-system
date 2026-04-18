@@ -6,11 +6,19 @@ import com.amsmanagament.system.Response.*;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.repo.UserRepo;
+import com.amsmanagament.system.serviceImpl.OtpService;
 import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.OrderUtils;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import com.amsmanagament.system.model.User;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +42,16 @@ public class AdminContoller {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    SmsService smsService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+
+
+    @Autowired
+    OtpService otpService;
 
 
     @Autowired
@@ -373,6 +391,53 @@ public class AdminContoller {
     @GetMapping("/search/user")
     public List<User> searchUsersByName(@RequestParam String name) throws Exception {
         return userService.searchUsersByUsername(name);
+    }
+
+    @PostMapping("/change-password/send-otp")
+    public ResponseEntity<String> sendOtp() throws Exception {
+
+        String phoneNumber = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepo.findByPhoneNumber(phoneNumber);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        String otp = otpService.generateOtp(phoneNumber);
+
+        smsService.sendSms("+977" + phoneNumber, "Your OTP is: " + otp);
+
+        return ResponseEntity.ok("OTP sent successfully");
+    }
+
+    @PostMapping("/change-password/verify")
+    public ResponseEntity<String> verifyAndChangePassword(
+            Authentication auth,
+            @RequestParam String otp,
+            @RequestParam String newPassword
+    ) {
+
+        String phoneNumber = auth.getName();
+
+        boolean valid = otpService.validateOtp(phoneNumber, otp);
+
+        if (!valid) {
+            return ResponseEntity.badRequest().body("Invalid OTP");
+        }
+
+        User user = userRepo.findByPhoneNumber(phoneNumber);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepo.save(user);
+
+        return ResponseEntity.ok("Password changed successfully");
     }
 }
 

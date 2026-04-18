@@ -48,12 +48,18 @@ public class forgetPasswordController {
 
     // Step 3: Reset Password
     @PostMapping("/forget-password/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestParam String phoneNumber, @RequestParam String newPassword) {
+    public ResponseEntity<String> resetPassword(@RequestParam String phoneNumber, @RequestParam String newPassword,@RequestParam String otp) {
         User user = userRepo.findByPhoneNumber(phoneNumber);
         if (user == null) return ResponseEntity.badRequest().body("User not found");
+        boolean valid = otpService.validateOtp(phoneNumber, otp);
+        if (!valid) {
+            return ResponseEntity.badRequest().body("Invalid or expired OTP");
+        }
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
+
+
         return ResponseEntity.ok("Password updated successfully");
     }
 }
