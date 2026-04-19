@@ -393,7 +393,7 @@ public class AdminContoller {
         return userService.searchUsersByUsername(name);
     }
 
-    @PostMapping("/change-password/send-otp")
+    @PostMapping("/send-otp")
     public ResponseEntity<String> sendOtp() throws Exception {
 
         String phoneNumber = SecurityContextHolder
@@ -409,7 +409,7 @@ public class AdminContoller {
 
         String otp = otpService.generateOtp(phoneNumber);
 
-        smsService.sendSms("+977" + phoneNumber, "Your OTP is: " + otp);
+        smsService.sendSms(  phoneNumber, "Your OTP is: " + otp);
 
         return ResponseEntity.ok("OTP sent successfully");
     }
