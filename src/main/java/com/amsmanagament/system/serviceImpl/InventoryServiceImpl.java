@@ -1,9 +1,11 @@
 package com.amsmanagament.system.serviceImpl;
 
 import com.amsmanagament.system.exception.ResourceNotFoundException;
+import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.Inventory;
 import com.amsmanagament.system.model.Product;
 import com.amsmanagament.system.model.Seller;
+import com.amsmanagament.system.repo.FarmerRepo;
 import com.amsmanagament.system.repo.InventoryRepo;
 import com.amsmanagament.system.repo.ProductRepo;
 import com.amsmanagament.system.repo.SellerRepo;
@@ -27,6 +29,9 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     private SellerRepo sellerRepo;
+
+    @Autowired
+    FarmerRepo farmerRepo;
 
     // ---------------- CHECK STOCK ----------------
 
@@ -71,19 +76,19 @@ public class InventoryServiceImpl implements InventoryService {
     // ---------------- CREATE INVENTORY ----------------
 
     @Override
-    public Inventory createInventory(Inventory inventory, Long productId, Long sellerId) {
+    public Inventory createInventory(Long productId, Long farmerId, int quantity, double price) {
 
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        Seller seller = sellerRepo.findById(sellerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+        Farmer farmer = farmerRepo.findById(farmerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Farmer not found"));
 
         Inventory newInventory = new Inventory();
         newInventory.setProduct(product);
-        newInventory.setSeller(seller);
-        newInventory.setQuantity(inventory.getQuantity());
-        newInventory.setPrice(inventory.getPrice());
+        newInventory.setFarmer(farmer);
+        newInventory.setQuantity(quantity);
+        newInventory.setPrice(price);
         newInventory.setCreatedAt(LocalDateTime.now());
         newInventory.setUpdatedAt(LocalDateTime.now());
 

@@ -14,4 +14,5 @@ public class ApiResponseInventory {
     private String message;
     private boolean status;
     private Inventory entity;
+
 }

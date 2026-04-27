@@ -20,7 +20,7 @@ public interface InventoryService {
     List<Inventory> getAllInventor();
 
     // Create inventory for a product
-    Inventory createInventory(Inventory inventory, Long productId, Long sellerId);
+    Inventory createInventory(Long productId, Long farmerId, int quantity, double price);
 
     // Update inventory details (price, location, etc.)
     Inventory updateInventory(Long inventoryId, Inventory inventory);

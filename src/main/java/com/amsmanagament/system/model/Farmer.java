@@ -1,6 +1,7 @@
 package com.amsmanagament.system.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,6 +38,11 @@ public class Farmer {
     @JsonManagedReference
     private List<Product> products;
 
+
+    @OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @JsonIgnore
+    private List<Inventory> inventories;
 
 
     @PrePersist

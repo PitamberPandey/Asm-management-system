@@ -1,5 +1,6 @@
 package com.amsmanagament.system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,8 +18,10 @@ public class Inventory {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
+    @JoinColumn(name = "farmer_id")
+    @JsonIgnore// ✅ change here
+    private Farmer farmer;
+
 
     @ManyToOne
     @JoinColumn(name = "product_id")

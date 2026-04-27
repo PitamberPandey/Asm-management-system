@@ -129,6 +129,7 @@ ProductRepo productRepo;
 
     @Override
     public List<Product> getProductsBySeller(Long userId) {
+
         // Find user
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
@@ -137,8 +138,8 @@ ProductRepo productRepo;
         Farmer farmer = farmerRepo.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Farmer profile not found for user ID: " + userId));
 
-        // Fetch all products by this farmer
-        List<Product> products = (List<Product>) productRepo.findByFarmerId(farmer.getId());
+        // Fetch products
+        List<Product> products = productRepo.findByFarmer_Id(farmer.getId());
 
         if (products.isEmpty()) {
             throw new RuntimeException("No products found for this seller");

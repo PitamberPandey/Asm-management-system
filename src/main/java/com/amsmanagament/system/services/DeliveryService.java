@@ -20,4 +20,11 @@ public interface DeliveryService {
 
     Delivery compeleteDelivery(Long id);
 
+    int countTotalDeliveriesByFarmer(Long farmerId);
+
+    int countCompletedDeliveriesByFarmer(Long farmerId);
+
+    int countPendingDeliveriesByFarmer(Long farmerId);
+
+
 }

@@ -22,4 +22,27 @@ FROM OrderItem oi
 WHERE oi.order.id = :orderId
 """)
     Long calculateTotalAmountByOrderId(@Param("orderId") Long orderId);
+
+    @Query("""
+        SELECT COUNT(DISTINCT oi.order.id)
+        FROM OrderItem oi
+        WHERE oi.product.farmer.id = :farmerId
+    """)
+    int countOrdersByFarmerId(@Param("farmerId") Long farmerId);
+
+    // 2. Total Sold Quantity
+    @Query("""
+        SELECT COALESCE(SUM(oi.quantity), 0)
+        FROM OrderItem oi
+        WHERE oi.product.farmer.id = :farmerId
+    """)
+    int sumQuantityByFarmerId(@Param("farmerId") Long farmerId);
+
+    // 3. Total Revenue (IMPORTANT 🔥)
+    @Query("""
+        SELECT COALESCE(SUM(oi.quantity * oi.price), 0)
+        FROM OrderItem oi
+        WHERE oi.product.farmer.id = :farmerId
+    """)
+    Double calculateRevenueByFarmerId(@Param("farmerId") Long farmerId);
 }

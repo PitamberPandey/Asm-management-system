@@ -241,14 +241,38 @@ public class FarmerController {
         return ResponseEntity.ok(delivery);
     }
 
-    @PostMapping("/Inventory/seller/{sellerId}/product/{productId}")
-    public ResponseEntity<ApiResponseInventory> createInventory(@PathVariable Long sellerId, @PathVariable Long productId, @RequestParam int quantity,@RequestBody Inventory inventory) {
+    @PostMapping("/inventory/{farmerId}/product/{productId}")
+    public ResponseEntity<ApiResponseInventory> createInventory(
+            @PathVariable Long farmerId,
+            @PathVariable Long productId,
+            @RequestParam int quantity,
+            @RequestParam double price
+    ) {
         try {
-            Inventory inventorys=inventoryService.createInventory(inventory,productId,sellerId);// Adjust as needed
-            ApiResponseInventory response = new ApiResponseInventory("Inventory created successfully", true, inventorys);
+
+            Inventory inventory = inventoryService.createInventory(
+                    productId,
+                    farmerId,
+                    quantity,
+                    price
+            );
+
+            ApiResponseInventory response = ApiResponseInventory.builder()
+                    .message("Inventory created successfully")
+                    .status(true)
+                    .entity(inventory)
+                    .build();
+
             return ResponseEntity.ok(response);
+
         } catch (Exception e) {
-            ApiResponseInventory response = new ApiResponseInventory("Failed to create inventory: " + e.getMessage(), false, null);
+
+            ApiResponseInventory response = ApiResponseInventory.builder()
+                    .message("Failed to create inventory: " + e.getMessage())
+                    .status(false)
+                    .entity(null)
+                    .build();
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -330,6 +354,35 @@ public class FarmerController {
     @GetMapping("/orders/{orderId}/total-price")
     public Long calculateTotalPrice(@PathVariable Long orderId) {
         return orderitemService.calculateTotalAmountByOrderId(orderId);
+    }
+
+
+    @GetMapping("/dashboard/{farmerId}")
+    public FarmerDasboardReponse getDashboardData(@PathVariable Long farmerId )  {
+
+        int totalProducts = productService.getProductsBySeller(farmerId).size();
+
+        Long totalOrders = orderitemService.countOrdersByFarmer(farmerId);
+
+        Long totalSoldItems =orderitemService.countSoldItemsByFarmer(farmerId);
+
+
+        int TotaltotalDeilveries = deliveryService.countTotalDeliveriesByFarmer(farmerId);
+        int delivered = deliveryService.countCompletedDeliveriesByFarmer(farmerId);
+
+        int pending = deliveryService.countTotalDeliveriesByFarmer(farmerId);
+        Double TotalEarn_Price = orderitemService.totalRevenueByFarmer(farmerId);
+
+
+        return new FarmerDasboardReponse(
+                totalProducts,
+                totalOrders,
+                totalSoldItems,
+                TotaltotalDeilveries ,
+                delivered,
+                pending,
+                TotalEarn_Price
+        );
     }
 
 

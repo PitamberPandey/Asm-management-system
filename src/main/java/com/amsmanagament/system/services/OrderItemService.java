@@ -18,6 +18,10 @@ public interface OrderItemService {
     List<OrderItem> getOrderItemsByOrderId(Long orderId);
     Long calculateTotalAmountByOrderId(Long orderId);
 
+    Long countOrdersByFarmer(Long farmerId);
+    Long countSoldItemsByFarmer(Long farmerId);
+
+    Double totalRevenueByFarmer(Long farmerId);
 
 
 

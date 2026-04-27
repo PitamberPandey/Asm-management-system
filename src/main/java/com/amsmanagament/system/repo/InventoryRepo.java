@@ -16,7 +16,7 @@ public interface InventoryRepo extends JpaRepository<Inventory, Long> {
    Inventory findByProduct_Id(Long productId);
 
     // Optional: inventory by seller
-    Inventory findBySeller(Seller seller);
+
 
 
     @Query("SELECT i FROM Inventory i WHERE LOWER(i.product.productName) LIKE LOWER(CONCAT('%', :keyword, '%'))")

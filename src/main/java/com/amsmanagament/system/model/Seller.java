@@ -31,8 +31,8 @@ public class Seller {
     private double latitude;
     private double longitude;
 
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Inventory> inventories;
+//    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    private List<Inventory> inventories;
 }
 

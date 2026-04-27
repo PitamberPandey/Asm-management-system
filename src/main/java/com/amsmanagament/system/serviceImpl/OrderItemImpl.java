@@ -92,4 +92,18 @@ private OrderRepo orderRepo;
        return orderItemRepo.calculateTotalAmountByOrderId(orderId);
 
     }
+
+    @Override
+    public Long countOrdersByFarmer(Long farmerId) {
+        return (long) orderItemRepo.countOrdersByFarmerId(farmerId);
+    }
+    @Override
+    public Long countSoldItemsByFarmer(Long farmerId) {
+        return (long) orderItemRepo.sumQuantityByFarmerId(farmerId);
+    }
+
+    @Override
+    public Double totalRevenueByFarmer(Long farmerId) {
+        return orderItemRepo.calculateRevenueByFarmerId(farmerId);
+    }
 }

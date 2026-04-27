@@ -30,7 +30,7 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     List<Product> findByCategory(Category category);
 
 
-    User findByFarmerId(long id);
+    List<Product> findByFarmer_Id(Long farmerId);
 
     @Query("SELECT i FROM Product i WHERE LOWER(i.address) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Product> searchByAddress(@Param("keyword") String keyword);
