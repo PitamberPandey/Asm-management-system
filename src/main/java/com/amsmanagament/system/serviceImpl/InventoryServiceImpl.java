@@ -86,7 +86,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         Inventory newInventory = new Inventory();
         newInventory.setProduct(product);
-        newInventory.setFarmer(farmer);
+//        newInventory.setFarmer(farmer);
         newInventory.setQuantity(quantity);
         newInventory.setPrice(price);
         newInventory.setCreatedAt(LocalDateTime.now());
@@ -161,7 +161,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public int getTotalInventoryByFarmer(Long farmerId) {
+    public Long getTotalInventoryByFarmer(Long farmerId) {
 
         return inventoryRepo.getTotalInventoryByFarmer(farmerId);
     }

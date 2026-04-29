@@ -35,7 +35,7 @@ public interface InventoryService {
     // Delete inventory
     void deleteInventory(Long inventoryId);
 
-     int getTotalInventoryByFarmer(Long farmerId);
+     Long getTotalInventoryByFarmer(Long farmerId);
 
      List<Inventory> getInventoriesByFarmer(Long farmerId);
 }

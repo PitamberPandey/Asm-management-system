@@ -39,10 +39,7 @@ public class Farmer {
     private List<Product> products;
 
 
-    @OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    @JsonIgnore
-    private List<Inventory> inventories;
+    
 
 
     @PrePersist

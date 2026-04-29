@@ -19,7 +19,7 @@ public class FarmerDasboardReponse {
     private int totalDelivered;
     private int pendingDeliveries;
     private  Double  TotalEarn_Price;
-    private int TotalInventoryItems;
+    private Long TotalInventoryItems;
 
 
 

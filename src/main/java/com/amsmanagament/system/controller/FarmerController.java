@@ -376,7 +376,7 @@ public class FarmerController {
         int pending = deliveryService.countTotalDeliveriesByFarmer(farmerId);
         Double TotalEarn_Price = orderitemService.totalRevenueByFarmer(farmerId);
 
-        int TotalInventory = inventoryService.getTotalInventoryByFarmer(farmerId);
+        Long TotalInventory = inventoryService.getTotalInventoryByFarmer(farmerId);
 
 
 

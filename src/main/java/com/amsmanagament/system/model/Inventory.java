@@ -17,10 +17,6 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "farmer_id")
-    @JsonIgnore// ✅ change here
-    private Farmer farmer;
 
 
     @ManyToOne
