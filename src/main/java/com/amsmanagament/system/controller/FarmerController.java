@@ -37,6 +37,9 @@ public class FarmerController {
     @Autowired
     OrderItemService orderitemService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("/user/{id}")
     public ResponseEntity<Farmer> getUserById(@PathVariable Long id) throws Exception {
         Farmer user = farmerservice.findById(id);
@@ -373,6 +376,9 @@ public class FarmerController {
         int pending = deliveryService.countTotalDeliveriesByFarmer(farmerId);
         Double TotalEarn_Price = orderitemService.totalRevenueByFarmer(farmerId);
 
+        int TotalInventory = inventoryService.getTotalInventoryByFarmer(farmerId);
+
+
 
         return new FarmerDasboardReponse(
                 totalProducts,
@@ -381,12 +387,25 @@ public class FarmerController {
                 TotaltotalDeilveries ,
                 delivered,
                 pending,
-                TotalEarn_Price
+                TotalEarn_Price,
+                TotalInventory
         );
     }
 
 
+    @GetMapping("/phone/{number}")
+    public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String number) throws Exception {
+        User user = userService.findUserByNumber(number);
+        return ResponseEntity.ok(user);
+    }
 
+@GetMapping("/inventory/farmer/{farmerId}")
+    public ResponseEntity<List<Inventory>> getInventoryByFarmerId(@PathVariable Long farmerId) {
+    List<Inventory> inventoryList = inventoryService.getInventoriesByFarmer(farmerId);
+    return ResponseEntity.ok(inventoryList);
+
+
+}
 }
 
 

@@ -159,4 +159,15 @@ public class InventoryServiceImpl implements InventoryService {
 
         inventoryRepo.delete(inventory);
     }
+
+    @Override
+    public int getTotalInventoryByFarmer(Long farmerId) {
+
+        return inventoryRepo.getTotalInventoryByFarmer(farmerId);
+    }
+
+    @Override
+    public List<Inventory> getInventoriesByFarmer(Long farmerId) {
+        return inventoryRepo.getInventoriesByFarmer(farmerId);
+    }
 }
