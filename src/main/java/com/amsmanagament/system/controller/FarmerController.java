@@ -406,6 +406,13 @@ public class FarmerController {
 
 
 }
+
+@GetMapping("/product/farmer/{farmerId}")
+    public ResponseEntity<List<Product>> getProductByfarmerid(@PathVariable Long farmerId){
+        List<Product> products=productService.getProductsBySeller(farmerId);
+        return ResponseEntity.ok(products);
+}
+
 }
 
 

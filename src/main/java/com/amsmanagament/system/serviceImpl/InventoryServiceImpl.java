@@ -163,7 +163,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Long getTotalInventoryByFarmer(Long farmerId) {
 
-        return inventoryRepo.getTotalInventoryByFarmer(farmerId);
+        return inventoryRepo.getTotalInventoryCountByUser(farmerId);
     }
 
     @Override
