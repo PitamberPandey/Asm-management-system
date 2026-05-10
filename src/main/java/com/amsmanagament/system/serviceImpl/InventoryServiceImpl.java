@@ -86,7 +86,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         Inventory newInventory = new Inventory();
         newInventory.setProduct(product);
-//        newInventory.setFarmer(farmer);
+
         newInventory.setQuantity(quantity);
         newInventory.setPrice(price);
         newInventory.setCreatedAt(LocalDateTime.now());

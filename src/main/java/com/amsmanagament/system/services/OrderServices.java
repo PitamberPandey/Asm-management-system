@@ -29,7 +29,9 @@ public interface OrderServices {
     Order cancelOrder(Long id, User currentuser)throws  Exception;//buyer
 
 
-    Order trackOrderLocation(Long orderId) throws  Exception;//buyer
+    Order trackOrderLocation(Long orderId) throws  Exception;
+
+    List<Order> findordeforfarmerid(Long farmerid);//buyer
 
 
 

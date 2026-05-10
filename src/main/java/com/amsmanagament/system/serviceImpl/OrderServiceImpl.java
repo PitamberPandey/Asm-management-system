@@ -3,6 +3,7 @@ package com.amsmanagament.system.serviceImpl;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.*;
 import com.amsmanagament.system.repo.ByerRepo;
+import com.amsmanagament.system.repo.FarmerRepo;
 import com.amsmanagament.system.repo.OrderItemRepo;
 import com.amsmanagament.system.repo.OrderRepo;
 import com.amsmanagament.system.services.BuyerServices;
@@ -28,6 +29,9 @@ public class OrderServiceImpl implements OrderServices {
 
     @Autowired
     private OrderRepo orderRepo;
+
+    @Autowired
+    private FarmerRepo farmerRepo;
 
     @Autowired
     ByerRepo byerRepo;
@@ -239,5 +243,13 @@ public class OrderServiceImpl implements OrderServices {
 
         // Return the order with its location
         return order;
+    }
+
+    @Override
+    public List<Order> findordeforfarmerid(Long farmerid) {
+
+        Long farmer= farmerRepo.findById(farmerid).orElseThrow(()->new ResourceNotFoundException("Farmer not found with id "+farmerid)).getId();
+        List<Order> orders=orderRepo.findOrdersForFarmer(farmer);
+        return orders;
     }
 }

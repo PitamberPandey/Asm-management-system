@@ -38,6 +38,9 @@ public class FarmerController {
     OrderItemService orderitemService;
 
     @Autowired
+    OrderServices orderServices;
+
+    @Autowired
     UserService userService;
 
     @GetMapping("/user/{id}")
@@ -412,6 +415,13 @@ public class FarmerController {
         List<Product> products=productService.getProductsBySeller(farmerId);
         return ResponseEntity.ok(products);
 }
+
+    // 2️⃣ Get all orders for a specific user
+    @GetMapping("/farmerorder/{farmerId}")
+    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Long farmerId) throws Exception {
+        List<Order> orders = orderServices.findordeforfarmerid(farmerId);
+        return ResponseEntity.ok(orders);
+    }
 
 }
 
