@@ -21,6 +21,10 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "farmer_id")
+    private Farmer farmer;
+
     private LocalDateTime orderDate;
     private LocalDateTime orderupdatedate;
 
@@ -44,6 +48,7 @@ public class Order {
     // One Order → Many Payment attempts
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<Payment> payments;
+
 
 }
 

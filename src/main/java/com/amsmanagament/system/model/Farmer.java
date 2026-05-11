@@ -28,8 +28,12 @@ public class Farmer {
     private String farmerName;
     private String farmerAddress;
     private String wardNo;
+    private Double farmerlogitute;
+    private Double farmerlatitude;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "farmer")
+    private List<Order> orders;
     private String document;
     @Enumerated(EnumType.STRING)
     private Farmer_Status status;

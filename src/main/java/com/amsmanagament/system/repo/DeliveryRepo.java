@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface DeliveryRepo  extends JpaRepository<Delivery,Long> {
 
     Optional<Delivery> findById(Long id);
+    Delivery findByOrder_Id(Long orderId);
     Delivery findByOrder(Order Order);
     @Query("""
 SELECT COUNT(d)

@@ -56,6 +56,8 @@ public class FarmerServiceImpl implements Farmerservice {
         farmerToSave.setFarmerName(farmer.getFarmerName());
         farmerToSave.setFarmerAddress(farmer.getFarmerAddress());
         farmerToSave.setWardNo(farmer.getWardNo());
+        farmerToSave.setFarmerlogitute(farmer.getFarmerlogitute());
+        farmerToSave.setFarmerlatitude(farmer.getFarmerlatitude());
         farmerToSave.setUser(loggedInUser); // important to avoid null user
         farmerToSave.setDocument(farmer.getDocument());
         farmerToSave.setStatus(Farmer_Status.STATUS_PENDING);

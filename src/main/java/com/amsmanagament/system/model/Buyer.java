@@ -20,7 +20,7 @@ public class Buyer {
     private Long id;
 
     // One user can have one buyer profile
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

@@ -22,8 +22,8 @@ public class Delivery {
     private String deliveryAddress;
     private String contactNumber;
     private String recipientName;
-    private String longitude;
-    private String latitude;
+    private Double longitude;
+    private Double latitude;
     private String deliveryStatus="PENDING"; // PENDING, DISPATCHED, DELIVERED
     private LocalDateTime createdAt;
     private LocalDateTime deliveryTime;

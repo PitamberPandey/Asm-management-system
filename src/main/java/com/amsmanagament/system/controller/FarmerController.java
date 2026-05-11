@@ -6,11 +6,13 @@ import com.amsmanagament.system.Response.*;
 
 import com.amsmanagament.system.model.*;
 
+import com.amsmanagament.system.repo.DeliveryRepo;
 import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -42,6 +44,12 @@ public class FarmerController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    DeliveryRepo deliveryRepo;
+
+    @Autowired
+    TrackingService TrackingService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<Farmer> getUserById(@PathVariable Long id) throws Exception {
@@ -423,6 +431,41 @@ public class FarmerController {
         return ResponseEntity.ok(orders);
     }
 
+    @PostMapping("/start/{orderId}")
+    public String startTracking(@PathVariable Long orderId) {
+
+        // 🔥 Get delivery by orderId
+        Delivery delivery = deliveryRepo.findByOrder_Id(orderId);
+
+        if (delivery == null) {
+            return "Delivery not found for orderId: " + orderId;
+        }
+
+        // 🟢 START LOCATION (Farmer)
+        Double startLat = delivery.getOrder()
+                .getFarmer()
+                .getFarmerlatitude();
+
+        Double startLng = delivery.getOrder()
+                .getFarmer()
+                .getFarmerlogitute();
+
+        // 🔵 END LOCATION (Delivery)
+        Double endLat = delivery.getLatitude();
+        Double endLng = delivery.getLongitude();
+        System.out.println("Starting tracking for orderId: " + orderId);
+        System.out.println("Start Location: (" + startLat + ", " + startLng + ")");
+        System.out.println("End Location: (" + endLat + ", " + endLng + ")");
+        TrackingService.startMovement(
+                orderId,
+                startLat,
+                startLng,
+                endLat,
+                endLng
+        );
+
+        return "Tracking started for orderId: " + orderId;
+    }
 }
 
 
