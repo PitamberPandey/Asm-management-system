@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/farmer")
@@ -466,6 +467,35 @@ public class FarmerController {
 
         return "Tracking started for orderId: " + orderId;
     }
+
+    @DeleteMapping("/delete/order/{id}")
+    public ResponseEntity<ApiOrderResponse> deleteOrder(@PathVariable("id") Long id) throws Exception {
+        try {
+            Order order1 = orderServices.deleteOrder(id);
+            ApiOrderResponse api = new ApiOrderResponse("delete order successfully", true, order1);
+            return ResponseEntity.ok(api);
+        } catch (Exception e) {
+            ApiOrderResponse api = new ApiOrderResponse("failed to order order", false, null);
+            return ResponseEntity.badRequest().body(api);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrderById(@PathVariable Long id) throws Exception {
+        Optional<Order> orderOpt = orderServices.getOrderById(id);
+        if (orderOpt.isPresent()) {
+            return ResponseEntity.ok(orderOpt.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/verify")
+    public ResponseEntity<Order> verifyOrder(@PathVariable Long id) throws Exception {
+        Order order = orderServices.verifyOrder(id);
+        return ResponseEntity.ok(order);
+    }
+
 }
 
 

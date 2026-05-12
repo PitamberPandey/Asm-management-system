@@ -32,8 +32,11 @@ public class Farmer {
     private Double farmerlatitude;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "farmer")
     private List<Order> orders;
+
     private String document;
     @Enumerated(EnumType.STRING)
     private Farmer_Status status;

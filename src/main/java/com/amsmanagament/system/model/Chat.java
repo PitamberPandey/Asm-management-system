@@ -24,8 +24,10 @@ public class Chat {
 
     // Each chat belongs to a Seller
     @ManyToOne(optional = false)
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
+    @JoinColumn(name = "farmer_id", nullable = false)
+    private Farmer farmer;
+
+
 
     // List of messages in this chat
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)

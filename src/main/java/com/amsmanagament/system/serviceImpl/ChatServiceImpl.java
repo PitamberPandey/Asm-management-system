@@ -3,9 +3,11 @@ package com.amsmanagament.system.serviceImpl;
 import com.amsmanagament.system.exception.ResourceNotFoundException;
 import com.amsmanagament.system.model.Buyer;
 import com.amsmanagament.system.model.Chat;
+import com.amsmanagament.system.model.Farmer;
 import com.amsmanagament.system.model.Seller;
 import com.amsmanagament.system.repo.ByerRepo;
 import com.amsmanagament.system.repo.ChatRepo;
+import com.amsmanagament.system.repo.FarmerRepo;
 import com.amsmanagament.system.repo.SellerRepo;
 import com.amsmanagament.system.services.ChatServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,34 +22,34 @@ public class ChatServiceImpl implements ChatServices {
     @Autowired
     private ChatRepo chatRepo;
 
-    @Autowired
-    private SellerRepo sellerRepo;
+
 
     @Autowired
     private ByerRepo byerRepo;
 
+    @Autowired
+    FarmerRepo farmerRepo;
+
     @Override
-    public Chat createChat(Long buyerId, Long sellerId) {
+    public Chat createChat(Long buyerId, Long farmerId) {
 
         Buyer buyer = byerRepo.findById(buyerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with this id " + buyerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with id " + buyerId));
 
-        Seller seller = sellerRepo.findById(sellerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Seller not found with id " + sellerId));
+        Farmer farmer = farmerRepo.findById(farmerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Farmer not found with id " + farmerId));
 
-        // Check if chat already exists between buyer and seller
-        Optional<Chat> existingChat = chatRepo.findByBuyerAndSeller(buyer, seller);
+        Optional<Chat> existingChat = chatRepo.findByBuyerAndFarmer(buyer, farmer);
         if (existingChat.isPresent()) {
-            return existingChat.get(); // return existing chat
+            return existingChat.get();
         }
 
         Chat chat = new Chat();
         chat.setBuyer(buyer);
-        chat.setSeller(seller);
+        chat.setFarmer(farmer);   // ✅ correct field
 
         return chatRepo.save(chat);
     }
-
     @Override
     public void deleteChat(Long chatId) {
         Chat chat = chatRepo.findById(chatId)
@@ -70,9 +72,9 @@ public class ChatServiceImpl implements ChatServices {
         Buyer buyer = byerRepo.findById(buyerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with id " + buyerId));
 
-        Seller seller = sellerRepo.findById(sellerId)
+        Farmer farmer=farmerRepo.findById(sellerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Seller not found with id " + sellerId));
 
-        return chatRepo.findByBuyerAndSeller(buyer, seller);
+        return chatRepo.findByBuyerAndFarmer(buyer, farmer);
     }
 }

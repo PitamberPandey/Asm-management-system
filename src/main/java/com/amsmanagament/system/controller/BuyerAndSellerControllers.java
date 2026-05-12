@@ -23,12 +23,12 @@ public class BuyerAndSellerControllers {
     private MessageServices messageServices;
 
 
-    @PostMapping("/create/{buyerId}/chat/{sellerId}")
+    @PostMapping("/create/{buyerId}/chat/{farmerId}")
     public ResponseEntity<ApiChatReponse> createChat(@PathVariable Long buyerId,
-                                                     @PathVariable Long sellerId) {
+                                                     @PathVariable Long farmerId) {
         try {
             // Create or get chat
-            Chat chat = chatServices.createChat(buyerId, sellerId);
+            Chat chat = chatServices.createChat(buyerId, farmerId);
 
             // Build API response
             ApiChatReponse apiChatReponse = new ApiChatReponse(

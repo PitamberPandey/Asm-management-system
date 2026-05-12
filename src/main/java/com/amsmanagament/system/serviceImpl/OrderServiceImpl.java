@@ -68,6 +68,12 @@ public class OrderServiceImpl implements OrderServices {
         // ✅ Set fields
         order.setUser(user);
         order.setBuyer(buyer);
+        Farmer farmer = order.getOrderItems()
+                .get(0)
+                .getProduct()
+                .getFarmer();
+
+        order.setFarmer(farmer);
         order.setOrderDate(LocalDateTime.now());
         order.setOrderupdatedate(LocalDateTime.now());
 
@@ -116,8 +122,7 @@ public class OrderServiceImpl implements OrderServices {
 
         existingOrder.setStatus(order.getStatus());
         existingOrder.setOrderupdatedate(LocalDateTime.now());
-        if (order.getLatitude() != null) existingOrder.setLatitude(order.getLatitude());
-        if (order.getLongitude() != null) existingOrder.setLongitude(order.getLongitude());
+
 
         if (order.getBuyer() != null) {
             Buyer buyer = buyerServices.getBuyerById(order.getBuyer().getId());
@@ -127,17 +132,9 @@ public class OrderServiceImpl implements OrderServices {
         Order savedOrder = orderRepo.save(existingOrder);
 
         // 🔥 SEND REAL-TIME LOCATION TO FRONTEND
-        if (savedOrder.getLatitude() != null && savedOrder.getLongitude() != null) {
 
-            var location = new java.util.HashMap<String, Object>();
-            location.put("lat", savedOrder.getLatitude());
-            location.put("lng", savedOrder.getLongitude());
 
-            messagingTemplate.convertAndSend(
-                    "/topic/location/" + savedOrder.getId(),
-                    location
-            );
-        }
+
 
         return savedOrder;
     }
@@ -196,7 +193,7 @@ public class OrderServiceImpl implements OrderServices {
     public Order verifyOrder(Long id) {
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
-        order.setStatus("APPROVED");
+        order.setVerify("VERIFIED");
         return orderRepo.save(order);
     }
 
@@ -237,9 +234,7 @@ public class OrderServiceImpl implements OrderServices {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + orderId));
 
         // Optionally, you can check if latitude and longitude exist
-        if (order.getLatitude() == null || order.getLongitude() == null) {
-            throw new ResourceNotFoundException("Location not available for this order yet");
-        }
+
 
         // Return the order with its location
         return order;

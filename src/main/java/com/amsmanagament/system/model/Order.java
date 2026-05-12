@@ -37,8 +37,8 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "buyer_id")
     private Buyer buyer;
-    private Double latitude;   // e.g., 27.700769 for Kathmandu
-    private Double longitude;
+     private String verify="UNVERIFIED";// UNVERIFIED, VERIFIED, REJECTED
+
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 

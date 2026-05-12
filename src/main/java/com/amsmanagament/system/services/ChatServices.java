@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface ChatServices {
 
-    // Create a chat between buyer and seller if not exists
-    Chat createChat(Long buyerId, Long sellerId);
+
+    Chat createChat(Long buyerId, Long farmerId);
 
     // Delete chat by ID
     void deleteChat(Long chatId);
