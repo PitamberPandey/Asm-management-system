@@ -26,5 +26,7 @@ public interface DeliveryService {
 
     int countPendingDeliveriesByFarmer(Long farmerId);
 
+    List<Delivery> findbyFarmerId(Long farmerId);
+
 
 }

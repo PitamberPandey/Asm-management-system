@@ -110,4 +110,9 @@ public class DeliveryServiceImpl implements DeliveryService {
     public int countPendingDeliveriesByFarmer(Long farmerId) {
         return deliveryRepo.countPendingByFarmer(farmerId);
     }
+
+    @Override
+    public List<Delivery> findbyFarmerId(Long farmerId) {
+        return deliveryRepo.findByOrder_Farmer_Id(farmerId);
+    }
 }

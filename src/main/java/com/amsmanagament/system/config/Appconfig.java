@@ -36,6 +36,12 @@ public class Appconfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/topic/**").permitAll()
+                        .requestMatchers("/app/**").permitAll()
+                        .requestMatchers("/queue/**").permitAll()
+
+
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/farmer/**").hasAnyRole("ADMIN","FARM")
                         .requestMatchers("/api/buyer/**").hasAnyRole("ADMIN","BUYER")

@@ -12,21 +12,32 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(WebSocketConfig.class);
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic", "/queue"); // add /queue for per-user
+
+        config.enableSimpleBroker("/topic", "/queue");
+
         config.setApplicationDestinationPrefixes("/app");
-        config.setUserDestinationPrefix("/user"); // important for private messages
-        logger.info("Message broker configured with /topic, /queue, and /user prefixes");
+
+        config.setUserDestinationPrefix("/user");
+
+        logger.info("WebSocket broker configured");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*") // allow all origins
-                .withSockJS();                 // enable SockJS fallback
-        logger.info("WebSocket endpoint /ws registered with SockJS support");
+
+                // 🔥 IMPORTANT FIX (CORS for React frontend)
+                .setAllowedOriginPatterns("*")
+
+                // 🔥 IMPORTANT FIX (SockJS fallback support)
+                .withSockJS();
+
+        logger.info("WebSocket endpoint /ws registered");
     }
 }

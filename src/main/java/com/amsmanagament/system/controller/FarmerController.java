@@ -250,6 +250,12 @@ public class FarmerController {
         return ResponseEntity.ok(delivery);
     }
 
+    @GetMapping("/get/deliveries/{farmerid}")
+    public ResponseEntity<List<Delivery>> getDeliveriesByFarmerId(@PathVariable("farmerid") Long farmerId) throws Exception {
+        List<Delivery> deliveries = deliveryService.findbyFarmerId(farmerId);
+        return ResponseEntity.ok(deliveries);
+    }
+
     @GetMapping("/getdelivery/order/{orderId}")
     public ResponseEntity<Delivery> getDeliveryByOrderId(@PathVariable("orderId") Long orderId) throws Exception {
         Delivery delivery = deliveryService.findByOrder(orderId);

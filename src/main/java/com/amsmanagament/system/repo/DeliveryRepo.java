@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DeliveryRepo  extends JpaRepository<Delivery,Long> {
@@ -47,4 +48,5 @@ AND d.order.id IN (
 )
 """)
     int countPendingByFarmer(@Param("farmerId") Long farmerId);
+    List<Delivery> findByOrder_Farmer_Id(Long farmerId);
 }
