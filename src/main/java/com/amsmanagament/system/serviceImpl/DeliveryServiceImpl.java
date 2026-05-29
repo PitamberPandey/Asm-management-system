@@ -9,6 +9,7 @@ import com.amsmanagament.system.services.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,6 +35,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery1.setLatitude(delivery.getLatitude());
         delivery1.setLongitude(delivery.getLongitude());
         delivery1.setDeliveryTime(delivery.getDeliveryTime());
+        delivery1.setCreatedAt(LocalDateTime.now());
 
         return deliveryRepo.save(delivery1);
     }
@@ -78,7 +80,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         Delivery find = deliveryRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Delivery not found"));
 
-        find.setDeliveryStatus("Verified");
+        find.setFarmerstatus("verifed");
         return deliveryRepo.save(find);
     }
 
