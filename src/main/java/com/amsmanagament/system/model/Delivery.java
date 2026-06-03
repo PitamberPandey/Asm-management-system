@@ -27,6 +27,6 @@ public class Delivery {
     private String deliveryStatus="PENDING";
     private String farmerstatus="unverifed";// PENDING, DISPATCHED, DELIVERED
     private LocalDateTime createdAt;
-    private LocalDateTime deliveryTime;
+    private String deliveryTime;
 
 }

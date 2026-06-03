@@ -58,8 +58,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         existingDelivery.setDeliveryStatus(delivery.getDeliveryStatus());
         existingDelivery.setRecipientName(delivery.getRecipientName());
         existingDelivery.setDeliveryTime(delivery.getDeliveryTime());
-        existingDelivery.setLatitude(delivery.getLatitude());
-        existingDelivery.setLongitude(delivery.getLongitude());
+
 
         return deliveryRepo.save(existingDelivery);
     }
