@@ -7,10 +7,15 @@ import com.amsmanagament.system.Response.*;
 import com.amsmanagament.system.model.*;
 
 import com.amsmanagament.system.repo.DeliveryRepo;
+import com.amsmanagament.system.repo.UserRepo;
+import com.amsmanagament.system.serviceImpl.OtpService;
 import com.amsmanagament.system.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -51,6 +56,17 @@ public class FarmerController {
 
     @Autowired
     TrackingService TrackingService;
+
+    @Autowired
+    OtpService otpService;
+    @Autowired
+    UserRepo userRepo;
+
+    @Autowired
+    SmsService smsService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<Farmer> getUserById(@PathVariable Long id) throws Exception {
@@ -412,7 +428,7 @@ public class FarmerController {
 
 
     @GetMapping("/phone/{number}")
-    public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String number) throws Exception {
+    public ResponseEntity<User> getUserByPhoneNumbers(@PathVariable String number) throws Exception {
         User user = userService.findUserByNumber(number);
         return ResponseEntity.ok(user);
     }
@@ -500,6 +516,53 @@ public class FarmerController {
     public ResponseEntity<Order> verifyOrder(@PathVariable Long id) throws Exception {
         Order order = orderServices.verifyOrder(id);
         return ResponseEntity.ok(order);
+    }
+
+    @PostMapping("/send-otp")
+    public ResponseEntity<String> sendOtp() throws Exception {
+
+        String phoneNumber = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepo.findByPhoneNumber(phoneNumber);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        String otp = otpService.generateOtp(phoneNumber);
+
+        smsService.sendSms(  phoneNumber, "Your OTP is: " + otp);
+
+        return ResponseEntity.ok("OTP sent successfully");
+    }
+
+    @PostMapping("/change-password/verify")
+    public ResponseEntity<String> verifyAndChangePassword(
+            Authentication auth,
+            @RequestParam String otp,
+            @RequestParam String newPassword
+    ) {
+
+        String phoneNumber = auth.getName();
+
+        boolean valid = otpService.validateOtp(phoneNumber, otp);
+
+        if (!valid) {
+            return ResponseEntity.badRequest().body("Invalid OTP");
+        }
+
+        User user = userRepo.findByPhoneNumber(phoneNumber);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepo.save(user);
+
+        return ResponseEntity.ok("Password changed successfully");
     }
 
 }
